@@ -518,12 +518,86 @@
   .garage-card.active-ride { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,255,204,0.1); }
   .garage-card .icon { font-size: 28px; margin-bottom: 4px; }
   .garage-card .name { font-family: var(--heading); font-size: 11px; letter-spacing: 1px; }
+
+  /* === NEW FEATURE CSS === */
+  body { transition: background 4s ease; }
+  body.is-night { background: radial-gradient(ellipse at top, #0a0520 0%, #08080e 60%); }
+  body.is-day { background: radial-gradient(ellipse at top, #0e1a10 0%, #08080e 60%); }
+
+  /* Crew Cards */
+  .crew-card { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--gang-colour, #ff0066); padding: 12px; margin-bottom: 8px; border-radius: 4px; }
+  .crew-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .crew-card-portrait { width: 40px; height: 40px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 4px; flex-shrink: 0; }
+  .crew-card-info { flex: 1; }
+  .crew-card-name { font-family: var(--heading); font-size: 14px; color: var(--text); }
+  .crew-card-role { font-size: 9px; padding: 2px 6px; margin-top: 2px; display: inline-block; }
+  .crew-loyalty-label { font-size: 9px; color: var(--muted); font-family: var(--heading); letter-spacing: 2px; margin-top: 6px; }
+  .crew-loyalty-label span { color: var(--text); }
+  .crew-card-stats { font-size: 10px; color: var(--muted); font-family: var(--mono); margin-top: 6px; }
+  .btn-sm { padding: 4px 8px; font-size: 10px; }
+
+  /* Full Garage Cards */
+  .garage-card-new { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 14px; margin-bottom: 12px; }
+  .garage-card-active { border-color: var(--neon-green); box-shadow: 0 0 15px rgba(57,255,20,0.1); }
+  .garage-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .garage-art { font-size: 56px; text-align: center; padding: 12px 0; }
+  .garage-plate { font-family: var(--mono); font-size: 14px; font-weight: 700; text-align: center; background: rgba(255,255,255,0.05); padding: 6px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 3px; color: var(--neon-yellow); }
+  .garage-stats { display: flex; justify-content: center; gap: 12px; font-size: 10px; font-family: var(--mono); color: var(--muted); }
+
+  /* SMS / Phone */
+  .sms-thread { display: flex; flex-direction: column; gap: 8px; }
+  .sms-bubble { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--gang-colour, #ff0066); padding: 10px 12px; border-radius: 4px; }
+  .sms-alert { border-left-color: var(--neon-red); }
+  .sms-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .sms-sender { font-family: var(--heading); font-size: 11px; letter-spacing: 2px; color: var(--neon-cyan); }
+  .sms-day { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+  .sms-text { font-size: 12px; color: var(--text); line-height: 1.5; font-family: var(--mono); }
+
+  /* Memories */
+  .memory-card { background: var(--surface2); border: 1px solid var(--border); border-top: 2px solid var(--gang-colour, #ff0066); padding: 12px; border-radius: 4px; text-align: center; }
+  .memory-icon { font-size: 32px; margin-bottom: 6px; }
+  .memory-title { font-family: var(--heading); font-size: 12px; letter-spacing: 1px; color: var(--text); margin-bottom: 2px; }
+  .memory-day { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-bottom: 4px; }
+  .memory-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+  /* Cash animation */
+  @keyframes cashFloat {
+    0% { opacity:1; transform:translateY(0) scale(1); }
+    100% { opacity:0; transform:translateY(-80px) scale(1.4); }
+  }
+  .cash-anim {
+    position:fixed; pointer-events:none; z-index:500;
+    font-family:var(--mono); font-weight:700; color:var(--neon-green);
+    text-shadow:0 0 20px rgba(57,255,20,0.8);
+    animation:cashFloat 1.5s ease-out forwards;
+    font-size:18px;
+  }
+
+  /* Scanner */
+  @keyframes scannerGlitch {
+    0%   { filter:none; }
+    91%  { filter:none; transform:none; }
+    92%  { filter:hue-rotate(90deg) saturate(2); transform:translateX(-2px); }
+    93%  { filter:none; transform:none; }
+    96%  { filter:hue-rotate(-90deg) brightness(1.2); transform:translateX(2px); }
+    100% { filter:none; transform:none; }
+  }
+  .scanner-active { animation: scannerGlitch 0.15s infinite; }
+  .scanner-bar {
+    position:fixed; top:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px; height:3px; z-index:9998;
+    background:linear-gradient(90deg, transparent, var(--neon-red), transparent);
+    display:none;
+  }
+  .scanner-bar.show { display:block; animation: scanBar 1.5s linear infinite; }
+  @keyframes scanBar { from{background-position:-100% 0} to{background-position:200% 0} }
 </style>
 </head>
 <body>
 
+<div class="scanner-bar" id="scannerBar"></div>
 <div class="header">
-  <div class="logo">MANORS<span>STREET EMPIRE</span></div>
+  <div class="logo">MANORS<span id="gangNameDisplay">STREET EMPIRE</span></div>
   <div class="header-stats">
     <span id="prestigeBadge"></span>
     <div class="cash-display" id="cashDisplay">£0</div>
@@ -538,6 +612,11 @@
   <div class="stat-item"><div class="stat-label">INCOME</div><div class="stat-value sv-income" id="statIncome">£0/d</div></div>
 </div>
 
+<div id="activeVehicleBanner" style="display:none; background:rgba(57,255,20,0.05); border-bottom:1px solid rgba(57,255,20,0.15); padding:6px 16px; font-family:var(--mono); font-size:10px; color:var(--neon-green); align-items:center; gap:8px;">
+  <span id="activeVehicleBannerIcon">🚗</span>
+  <span id="activeVehicleText"></span>
+</div>
+
 <div class="nav" id="navBar">
   <div class="nav-tab active" onclick="switchTab('market')">MARKET</div>
   <div class="nav-tab" onclick="switchTab('inventory')">STASH</div>
@@ -546,6 +625,11 @@
   <div class="nav-tab" onclick="switchTab('turf')">TURF</div>
   <div class="nav-tab" onclick="switchTab('assets')">ASSETS</div>
   <div class="nav-tab" onclick="switchTab('staff')">CREW</div>
+  <div class="nav-tab" onclick="switchTab('garage')">GARAGE</div>
+  <div class="nav-tab" onclick="switchTab('props')">PROPS</div>
+  <div class="nav-tab" onclick="switchTab('warroom')">WAR ROOM</div>
+  <div class="nav-tab" onclick="switchTab('phone')">📱 PHONE<span id="phoneNotifDot" style="display:none;width:6px;height:6px;background:var(--neon-red);border-radius:50%;margin-left:4px;vertical-align:middle"></span></div>
+  <div class="nav-tab" onclick="switchTab('memories')">MEMORIES</div>
   <div class="nav-tab" onclick="switchTab('hustle')">HUSTLE</div>
   <div class="nav-tab" onclick="switchTab('skills')">SKILLS</div>
   <div class="nav-tab" onclick="switchTab('missions')">MISSIONS</div>
@@ -630,13 +714,29 @@
 
   <!-- STAFF -->
   <div id="page-staff" class="page">
-    <div class="section-header"><div class="section-title">YOUR CREW</div></div>
-    <div class="card orange">
-      <div class="card-row"><div class="card-key">WEEKLY WAGES</div><div class="card-val" id="wageBill">£0</div></div>
-      <div class="card-row"><div class="card-key">CREW SIZE</div><div class="card-val" id="crewSize">0</div></div>
-    </div>
+    <div id="crewSummary" style="margin-bottom:10px;font-family:var(--mono);font-size:11px;color:var(--muted)"></div>
+    <div id="crewCardsContainer"></div>
+    <div class="section-title mb8 mt8">// HIRE CREW</div>
     <div id="staffList"></div>
   </div>
+
+  <!-- GARAGE -->
+  <div id="page-garage" class="page">
+    <div class="section-header"><div class="section-title">GARAGE</div></div>
+    <div id="garagePageContent"></div>
+  </div>
+
+  <!-- PROPS -->
+  <div id="page-props" class="page"></div>
+
+  <!-- WAR ROOM -->
+  <div id="page-warroom" class="page"></div>
+
+  <!-- PHONE -->
+  <div id="page-phone" class="page"></div>
+
+  <!-- MEMORIES -->
+  <div id="page-memories" class="page"></div>
 
   <!-- HUSTLE (mini games) -->
   <div id="page-hustle" class="page">
@@ -739,6 +839,7 @@
   <!-- PROFILE -->
   <div id="page-profile" class="page">
     <div class="section-header"><div class="section-title">YOUR RECORD</div></div>
+    <div id="wantedPoster" style="margin-bottom:10px"></div>
     <div class="card purple">
       <div class="card-row"><div class="card-key">NOTORIETY</div><div class="card-val text-purple neon-glow" id="notorietyTitle">Nobody</div></div>
       <div class="card-row"><div class="card-key">LIFESTYLE</div><div class="card-val text-cyan" id="lifestyleTier">Street Level</div></div>
@@ -746,6 +847,25 @@
       <div class="card-row"><div class="card-key">LEVEL</div><div class="card-val" id="profileLevel">1</div></div>
       <div class="card-row"><div class="card-key">XP</div><div class="card-val" id="profileXP">0 / 500</div></div>
       <div class="progress-bar mt8"><div class="progress-fill" id="xpBar" style="width:0%"></div></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-header"><div class="card-title">YOUR CREW</div></div>
+      <div class="card-row">
+        <span class="card-key">CREW NAME</span>
+        <input id="gangNameInput" type="text" maxlength="20" value=""
+               style="background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--neon-pink);font-family:var(--heading);font-size:14px;text-align:right;width:140px;letter-spacing:2px"
+               oninput="updateGangName(this.value)">
+      </div>
+      <div class="card-row" style="margin-top:8px">
+        <span class="card-key">CREW COLOUR</span>
+        <input type="color" id="gangColourInput" value="#ff0066"
+               style="width:40px;height:30px;border:none;background:none;cursor:pointer;padding:0"
+               oninput="applyGangColour(this.value)">
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-header"><div class="card-title">STREET BIO</div></div>
+      <div id="streetBioDisplay" style="font-size:12px;color:var(--muted);line-height:1.6;font-family:var(--mono)"></div>
     </div>
     <div class="card green">
       <div class="card-header"><div class="card-title">FINANCES</div></div>
@@ -855,6 +975,43 @@
   </div>
 </div>
 
+<!-- VEHICLE CUSTOMISE MODAL -->
+<div class="modal-overlay" id="vehicleCustomModal">
+  <div class="modal">
+    <div class="modal-title" id="vcModalTitle">CUSTOMISE RIDE</div>
+    <div class="modal-sub" id="vcModalSub"></div>
+    <div class="section-title" style="margin-bottom:8px">CUSTOM PLATE</div>
+    <input id="vcPlateInput" type="text" maxlength="7" placeholder="AB12 XYZ"
+           style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);padding:10px;font-family:var(--mono);font-size:16px;text-align:center;letter-spacing:4px;border-radius:4px;margin-bottom:14px;text-transform:uppercase">
+    <div class="section-title" style="margin-bottom:8px">PAINT JOB</div>
+    <div id="vcPaintSwatches" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
+    <div class="card-row" style="margin-bottom:14px">
+      <span class="card-key">WINDOW TINTS</span>
+      <button id="vcTintsBtn" class="btn btn-secondary" onclick="toggleVCTints()" style="padding:4px 12px;font-size:10px">OFF</button>
+    </div>
+    <div class="section-title" style="margin-bottom:8px">RIMS</div>
+    <div id="vcRimsRow" style="display:flex;gap:8px;margin-bottom:16px"></div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="section-title" style="margin-bottom:8px">EFFECT PREVIEW</div>
+      <div id="vcEffectPreview"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('vehicleCustomModal')">CANCEL</button>
+      <button class="btn btn-primary" onclick="saveVehicleMods()">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROPERTY UPGRADE MODAL -->
+<div class="modal-overlay" id="propUpgradeModal">
+  <div class="modal">
+    <div class="modal-title" id="puModalTitle">UPGRADE PROPERTY</div>
+    <div class="modal-sub" id="puModalSub"></div>
+    <div id="puUpgradeList"></div>
+    <button class="btn btn-secondary btn-full" onclick="closeModal('propUpgradeModal')" style="margin-top:8px">CLOSE</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <div class="achievement-popup" id="achPopup">
   <div class="achievement-popup-title">TROPHY UNLOCKED</div>
@@ -872,7 +1029,15 @@ const DS = {
   dailyMissions:[],missionDay:0,missionProgress:{},milestones:{},gameDay:0,isNight:false,
   buyPriceTracker:{},totalPlayTime:0,aliasSet:false,alias:'UNKNOWN',
   activeVehicle:null,trainBoost:0,trainEvents:0,hlStreak:0,hlBet:100,hlCard:0,coinBet:100,
+  crewMembers:[],crewMessages:[],pendingCrewEvent:null,gangName:'THE FIRM',gangColour:'#ff0066',
+  vehicleMods:{},propertyUpgrades:{},stashHouseId:null,rivals:[],memories:[],streetBio:'',bioMilestone:0,newsHeadlines:[],
 };
+
+// === CREW NAME GENERATORS (must be before migration) ===
+const STREET_PREFIXES=['Leaky','Proper','Mad','Tiny','Big','Likkle','Sket','Dutty','Nifty','Clever','Sneaky','Dodgy'];
+const STREET_SUFFIXES=['Nez','Bizz','Zed','T','Drizz','Spence','Mack','Tef','Blaze','Zero','Brix','Cash'];
+function genStreetName(){return STREET_PREFIXES[Math.floor(Math.random()*STREET_PREFIXES.length)]+' '+STREET_SUFFIXES[Math.floor(Math.random()*STREET_SUFFIXES.length)]}
+function makeFreshCrewMember(staffId){return{uid:'crew_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),id:staffId,name:genStreetName(),hireDay:(typeof G!=='undefined'?G.gameDay:0)||0,loyalty:70+Math.floor(Math.random()*20),morale:70+Math.floor(Math.random()*20),history:{fightsWon:0,dealsRun:0,events:0,arrests:0}}}
 
 let G=JSON.parse(localStorage.getItem('manors_v3')||'null')||JSON.parse(JSON.stringify(DS));
 // migrations
@@ -881,6 +1046,20 @@ let G=JSON.parse(localStorage.getItem('manors_v3')||'null')||JSON.parse(JSON.str
 if(!G.skills)G.skills={};if(!G.territories)G.territories={};if(!G.achievements)G.achievements=[];
 if(!G.dailyMissions)G.dailyMissions=[];if(!G.missionProgress)G.missionProgress={};if(!G.milestones)G.milestones={};
 if(!G.buyPriceTracker)G.buyPriceTracker={};if(!G.ownedLuxury)G.ownedLuxury=[];if(!G.activeVehicle)G.activeVehicle=null;
+// new field migrations
+if(!G.crewMembers)G.crewMembers=(G.staff||[]).map(s=>makeFreshCrewMember(s.id));
+if(!G.gangName)G.gangName='THE FIRM';
+if(!G.gangColour)G.gangColour='#ff0066';
+if(!G.vehicleMods)G.vehicleMods={};
+if(!G.propertyUpgrades)G.propertyUpgrades={};
+if(G.stashHouseId===undefined)G.stashHouseId=null;
+if(!G.crewMessages)G.crewMessages=[];
+if(!G.newsHeadlines)G.newsHeadlines=[];
+if(!G.rivals)G.rivals=[];
+if(!G.memories)G.memories=[];
+if(!G.streetBio)G.streetBio='';
+if(G.bioMilestone===undefined)G.bioMilestone=0;
+if(!G.pendingCrewEvent)G.pendingCrewEvent=null;
 
 let currentDrug=null,tradeQty=1,currentPurchase=null,marketTimerVal=30,dayTimer=0,activeTab='market';
 let lastEventTime=0,streetCooldown=0;
@@ -954,16 +1133,16 @@ const STAFF=[
   {id:'driver',name:'GETAWAY DRIVER',desc:'Better escape chance.',cost:6000,wage:800,icon:'🏎️'},
 ];
 const TERRITORIES=[
-  {id:'peckham',name:'PECKHAM',desc:'Home turf.',cost:5000,dailyIncome:300,repReq:5,difficulty:1},
-  {id:'brixton',name:'BRIXTON',desc:'Busy market.',cost:10000,dailyIncome:500,repReq:15,difficulty:2},
-  {id:'hackney',name:'HACKNEY',desc:'East London.',cost:15000,dailyIncome:700,repReq:25,difficulty:2},
-  {id:'lewisham',name:'LEWISHAM',desc:'South east.',cost:12000,dailyIncome:600,repReq:20,difficulty:2},
-  {id:'camden',name:'CAMDEN',desc:'Tourist money.',cost:25000,dailyIncome:1000,repReq:40,difficulty:3},
-  {id:'tottenham',name:'TOTTENHAM',desc:'North London rival turf.',cost:20000,dailyIncome:800,repReq:35,difficulty:3},
-  {id:'stratford',name:'STRATFORD',desc:'Olympic money.',cost:30000,dailyIncome:1200,repReq:50,difficulty:3},
-  {id:'westend',name:'WEST END',desc:'Central London.',cost:80000,dailyIncome:3500,repReq:80,difficulty:4},
-  {id:'canarywharf',name:'CANARY WHARF',desc:'City boys.',cost:120000,dailyIncome:5000,repReq:100,difficulty:5},
-  {id:'mayfair',name:'MAYFAIR',desc:'Old money.',cost:250000,dailyIncome:10000,repReq:150,difficulty:5},
+  {id:'peckham',name:'PECKHAM',desc:'Home turf.',cost:5000,dailyIncome:300,repReq:5,difficulty:1,icon:'🏘️'},
+  {id:'brixton',name:'BRIXTON',desc:'Busy market.',cost:10000,dailyIncome:500,repReq:15,difficulty:2,icon:'🛒'},
+  {id:'hackney',name:'HACKNEY',desc:'East London.',cost:15000,dailyIncome:700,repReq:25,difficulty:2,icon:'🏗️'},
+  {id:'lewisham',name:'LEWISHAM',desc:'South east.',cost:12000,dailyIncome:600,repReq:20,difficulty:2,icon:'🚉'},
+  {id:'camden',name:'CAMDEN',desc:'Tourist money.',cost:25000,dailyIncome:1000,repReq:40,difficulty:3,icon:'🎸'},
+  {id:'tottenham',name:'TOTTENHAM',desc:'North London rival turf.',cost:20000,dailyIncome:800,repReq:35,difficulty:3,icon:'⚽'},
+  {id:'stratford',name:'STRATFORD',desc:'Olympic money.',cost:30000,dailyIncome:1200,repReq:50,difficulty:3,icon:'🏟️'},
+  {id:'westend',name:'WEST END',desc:'Central London.',cost:80000,dailyIncome:3500,repReq:80,difficulty:4,icon:'🎭'},
+  {id:'canarywharf',name:'CANARY WHARF',desc:'City boys.',cost:120000,dailyIncome:5000,repReq:100,difficulty:5,icon:'🏦'},
+  {id:'mayfair',name:'MAYFAIR',desc:'Old money.',cost:250000,dailyIncome:10000,repReq:150,difficulty:5,icon:'💎'},
 ];
 const SKILLS={
   hustler:{name:'HUSTLER',icon:'💰',color:'var(--neon-green)',nodes:[
@@ -1078,19 +1257,136 @@ const RANDOM_EVENTS=[
     options:[{text:'Offer protection',risk:'MED',action:'protect_accept'},{text:'Stay out',risk:'NONE',action:'protect_pass'}]},
 ];
 
+// ==================== NEW DATA ====================
+const CREW_EVENTS={
+  runner:[
+    {id:'runner_arrest',icon:'🚔',title:'RUNNER NICKED',desc:(m)=>`${m.name} got pulled by the feds outside Brixton. They're asking questions.`,options:[{text:'Pay bail (£500)',risk:'LOW',action:'bail'},{text:'Go dark — say nothing',risk:'MED',action:'silence'},{text:'Cut them loose',risk:'HIGH',action:'abandon'}]},
+    {id:'runner_tip',icon:'💬',title:'STREET TIP',desc:(m)=>`${m.name} heard about a big score going down tonight.`,options:[{text:'Move on it (£200)',risk:'MED',action:'move_on_tip'},{text:'Leave it',risk:'SAFE',action:'ignore'}]}
+  ],
+  enforcer:[
+    {id:'enforcer_beef',icon:'😤',title:'BEEF BREWING',desc:(m)=>`${m.name} went rogue — taxed a rival runner without orders.`,options:[{text:'Back them up',risk:'HIGH',action:'back_up'},{text:'Distance yourself',risk:'MED',action:'distance'},{text:'Fire them',risk:'LOW',action:'fire_member'}]},
+    {id:'enforcer_loyal',icon:'💪',title:'LOYALTY CHECK',desc:(m)=>`${m.name} turned down a buyout from a rival crew.`,options:[{text:'Reward them (£300)',risk:'SAFE',action:'reward_enforcer'},{text:'Acknowledge it',risk:'SAFE',action:'acknowledge'}]}
+  ],
+  lawyer:[
+    {id:'lawyer_tip',icon:'📋',title:'LEGAL TIP-OFF',desc:(m)=>`${m.name} overheard something at the Old Bailey. There's a raid planned.`,options:[{text:'Act on the intel',risk:'LOW',action:'use_tip'},{text:'Ignore it',risk:'MED',action:'ignore'}]}
+  ],
+  lookout:[
+    {id:'lookout_spotted',icon:'👁',title:'EYES ON THE STREET',desc:(m)=>`${m.name} clocked undercover police watching your patch.`,options:[{text:'Lay low for now',risk:'SAFE',action:'lay_low'},{text:'Keep operating',risk:'HIGH',action:'ignore'}]}
+  ],
+  accountant:[
+    {id:'accountant_scheme',icon:'💼',title:'MONEY MOVE',desc:(m)=>`${m.name} found a way to clean some extra cash.`,options:[{text:'Let them run it (£1000)',risk:'LOW',action:'clean_cash'},{text:'Too risky, pass',risk:'SAFE',action:'ignore'}]}
+  ],
+  generic:[
+    {id:'generic_morale',icon:'🎉',title:'GOOD VIBES',desc:(m)=>`${m.name} kept things running smooth. Crew morale is up.`,options:[{text:'Keep it moving',risk:'SAFE',action:'noop'}]},
+    {id:'generic_issue',icon:'⚠️',title:'MINOR PROBLEM',desc:(m)=>`${m.name} messed up a drop. Nothing major, but needs sorting.`,options:[{text:'Sort it yourself (£150)',risk:'LOW',action:'sort_issue'},{text:'Make them fix it',risk:'MED',action:'crew_fix'}]}
+  ]
+};
+
+const RIVAL_POOL=[
+  {id:'manny_black',name:'Manny Black',area:'Tottenham',icon:'😠',startRep:30,threatLevel:'LOW'},
+  {id:'ice_queen',name:'Ice Queen',area:'Camden',icon:'❄️',startRep:25,threatLevel:'LOW'},
+  {id:'the_bishop',name:'The Bishop',area:'Canary Wharf',icon:'♟️',startRep:50,threatLevel:'MED'},
+  {id:'lil_jab',name:'Lil Jab',area:'Hackney',icon:'👊',startRep:15,threatLevel:'LOW'},
+  {id:'duchess',name:'The Duchess',area:'Chelsea',icon:'💅',startRep:70,threatLevel:'HIGH'},
+];
+
+const PROPERTY_UPGRADE_DEFS={
+  cctv:{name:'CCTV',icon:'📹',maxLevel:3,costs:[2000,4000,8000],desc:'Reduces heat generation'},
+  panicRoom:{name:'PANIC ROOM',icon:'🛡️',maxLevel:1,costs:[15000],desc:'Survive raids without losing stash'},
+  hiddenStash:{name:'HIDDEN STASH',icon:'📦',maxLevel:3,costs:[3000,6000,12000],desc:'+30 carry per level'},
+  gym:{name:'GYM',icon:'🏋️',maxLevel:3,costs:[2500,5000,10000],desc:'+1 HP regen per day per level'},
+  soundproofing:{name:'SOUNDPROOFING',icon:'🔇',maxLevel:3,costs:[2000,4000,8000],desc:'Reduces heat generation'}
+};
+
+const PAINT_OPTIONS=[
+  {name:'Blacked Out',hex:'#111111',heatMod:-0.02,repBonus:0},
+  {name:'All White',hex:'#f0f0f0',heatMod:-0.02,repBonus:0},
+  {name:'Blood Red',hex:'#cc0000',heatMod:0,repBonus:3},
+  {name:'Gold',hex:'#ffd700',heatMod:0.03,repBonus:5},
+  {name:'Feds Green',hex:'#003300',heatMod:-0.04,repBonus:0},
+  {name:'Deep Blue',hex:'#003399',heatMod:0,repBonus:0},
+  {name:'Silver',hex:'#aaaaaa',heatMod:-0.01,repBonus:0},
+  {name:'Purple Haze',hex:'#660066',heatMod:0,repBonus:2}
+];
+const RIMS_OPTIONS=[
+  {name:'Stock',id:'stock',repBonus:0,heatMod:0},
+  {name:'Chrome',id:'chrome',repBonus:2,heatMod:0},
+  {name:'Gold',id:'gold',repBonus:5,heatMod:0.02}
+];
+
+const TURF_NARRATIVES_WIN=[
+  (t,cc)=>`${cc>2?'Your crew rolls ':'You roll '}${t.name} deep at 2am. The rival lot scatter. By dawn it's yours.`,
+  (t)=>`Quick and clean. ${t.name} changes hands without a shot fired. Word travels fast.`,
+  (t)=>`${t.name} falls. Another postcode under your banner.`,
+];
+const TURF_NARRATIVES_LOSE=[
+  (t)=>`${t.name} held its ground. Your man took a hit. Not today.`,
+  (t)=>`Too much heat in ${t.name}. Fall back and regroup.`,
+];
+const TURF_NARRATIVES_BUY=[
+  (t)=>`£ changes hands. ${t.name} is now part of the empire. No blood, all business.`,
+  (t)=>`Bought out ${t.name}. The locals know who runs things now.`,
+];
+
 // ==================== HELPERS ====================
 function sv(id){return G.skills[id]||0}
 function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return Math.round(n).toLocaleString()}
 function tierUnlocked(t){return[0,1,3,8,15,25][t]<=G.level}
 function getMaxHP(){return 100+sv('m_health')*20}
-function getWeaponPower(){let p=5;G.ownedWeapons.forEach(id=>{const w=WEAPONS.find(x=>x.id===id);if(w)p=Math.max(p,w.power)});p+=G.staff.filter(s=>s.id==='enforcer').length*20;p+=sv('m_power')*10;p+=G.trainBoost;return p}
-function getEscapeChance(){let c=0.65+sv('m_escape')*0.1;if(G.staff.some(s=>s.id==='driver'))c+=0.15;const v=G.activeVehicle?VEHICLES.find(x=>x.id===G.activeVehicle):null;if(v&&v.escapeBonus)c+=v.escapeBonus;return Math.min(0.95,c)}
-function getHeatMod(){let m=1-sv('b_heat')*0.1;const lookouts=G.staff.filter(s=>s.id==='lookout').length;m-=lookouts*0.05;if(G.staff.some(s=>s.id==='lawyer'))m*=0.5;return Math.max(0.1,m)}
+
+function getCrewLoyaltyMult(staffId){
+  const members=G.crewMembers.filter(m=>m.id===staffId);
+  if(!members.length)return 1;
+  return members.reduce((s,m)=>s+(m.loyalty/100),0)/members.length;
+}
+function getWeaponPower(){
+  let p=5;G.ownedWeapons.forEach(id=>{const w=WEAPONS.find(x=>x.id===id);if(w)p=Math.max(p,w.power)});
+  const enforcers=G.crewMembers.filter(m=>m.id==='enforcer');
+  enforcers.forEach(m=>p+=20*(m.loyalty/100));
+  p+=sv('m_power')*10;p+=G.trainBoost;return Math.round(p);
+}
+function getEscapeChance(){
+  let c=0.65+sv('m_escape')*0.1;
+  if(G.crewMembers.some(m=>m.id==='driver'))c+=0.15*getCrewLoyaltyMult('driver');
+  const v=G.activeVehicle?VEHICLES.find(x=>x.id===G.activeVehicle):null;
+  if(v&&v.escapeBonus)c+=v.escapeBonus;
+  return Math.min(0.95,c);
+}
+function getHeatMod(){
+  let m=1-sv('b_heat')*0.1;
+  const lookouts=G.crewMembers.filter(m=>m.id==='lookout');
+  lookouts.forEach(lk=>m-=0.05*(lk.loyalty/100));
+  if(G.crewMembers.some(m=>m.id==='lawyer'))m*=(0.5+0.5*(1-getCrewLoyaltyMult('lawyer')));
+  // vehicle mod heat
+  const vmod=getVehicleModBonus(G.activeVehicle);
+  m+=vmod.heatMod;
+  // property upgrade heat reduction
+  const pub=getPropertyUpgradeBonus();
+  m-=pub.heatReduce;
+  return Math.max(0.1,m);
+}
 function getBuyDiscount(){return sv('h_haggle')*0.05}
 function getSellBonus(){return sv('h_markup')*0.05}
-function getCarryCap(){let c=100+sv('h_capacity')*25;G.ownedVehicles.forEach(id=>{const v=VEHICLES.find(x=>x.id===id);if(v&&v.carryBonus)c+=v.carryBonus});G.ownedProperties.forEach(id=>{const p=PROPERTIES.find(x=>x.id===id);if(p&&p.carryBonus)c+=p.carryBonus});G.ownedBusinesses.forEach(id=>{const b=BUSINESSES.find(x=>x.id===id);if(b&&b.carryBonus)c+=b.carryBonus});G.staff.forEach(s=>{const d=STAFF.find(x=>x.id===s.id);if(d&&d.carryBonus)c+=d.carryBonus});return c}
+function getCarryCap(){
+  let c=100+sv('h_capacity')*25;
+  G.ownedVehicles.forEach(id=>{const v=VEHICLES.find(x=>x.id===id);if(v&&v.carryBonus)c+=v.carryBonus});
+  G.ownedProperties.forEach(id=>{const p=PROPERTIES.find(x=>x.id===id);if(p&&p.carryBonus)c+=p.carryBonus});
+  G.ownedBusinesses.forEach(id=>{const b=BUSINESSES.find(x=>x.id===id);if(b&&b.carryBonus)c+=b.carryBonus});
+  G.crewMembers.forEach(m=>{const d=STAFF.find(x=>x.id===m.id);if(d&&d.carryBonus)c+=d.carryBonus});
+  c+=getPropertyUpgradeBonus().carryBonus;
+  if(G.stashHouseId&&G.ownedProperties.includes(G.stashHouseId))c+=200;
+  return c;
+}
 function getCurrentCarry(){return Object.values(G.inventory).reduce((a,b)=>a+b,0)}
-function getDailyIncome(){let t=0;const acc=G.staff.some(s=>s.id==='accountant');G.ownedBusinesses.forEach(id=>{const b=BUSINESSES.find(x=>x.id===id);if(b)t+=b.dailyIncome});G.ownedProperties.forEach(id=>{const p=PROPERTIES.find(x=>x.id===id);if(p)t+=p.dailyIncome});if(acc)t=Math.floor(t*1.1);t=Math.floor(t*(1+sv('h_income')*0.1+G.prestige*0.1));return t}
+function getDailyIncome(){
+  let t=0;
+  const hasAcc=G.crewMembers.some(m=>m.id==='accountant');
+  G.ownedBusinesses.forEach(id=>{const b=BUSINESSES.find(x=>x.id===id);if(b)t+=b.dailyIncome});
+  G.ownedProperties.forEach(id=>{const p=PROPERTIES.find(x=>x.id===id);if(p)t+=p.dailyIncome});
+  if(hasAcc)t=Math.floor(t*1.1*getCrewLoyaltyMult('accountant'));
+  t=Math.floor(t*(1+sv('h_income')*0.1+G.prestige*0.1));
+  return t;
+}
 function getTurfIncome(){let t=0;const nm=G.isNight?1.3:1;Object.entries(G.territories).forEach(([id,d])=>{if(d.owned){const tu=TERRITORIES.find(x=>x.id===id);if(tu)t+=Math.floor(tu.dailyIncome*nm)}});return t}
 function getNetWorth(){let n=G.cash;G.ownedBusinesses.forEach(id=>{const b=BUSINESSES.find(x=>x.id===id);if(b)n+=b.cost});G.ownedProperties.forEach(id=>{const p=PROPERTIES.find(x=>x.id===id);if(p)n+=p.cost});G.ownedVehicles.forEach(id=>{const v=VEHICLES.find(x=>x.id===id);if(v)n+=v.cost});G.ownedWeapons.forEach(id=>{const w=WEAPONS.find(x=>x.id===id);if(w)n+=w.cost});G.ownedLuxury.forEach(id=>{const l=LUXURY.find(x=>x.id===id);if(l)n+=l.cost});Object.entries(G.territories).forEach(([id,d])=>{if(d.owned){const t=TERRITORIES.find(x=>x.id===id);if(t)n+=t.cost}});Object.entries(G.inventory).forEach(([id,q])=>{n+=(G.marketPrices[id]||0)*q});return n}
 function getNotoriety(){let t='Nobody';NOTORIETY.forEach(n=>{if(G.level>=n.minLevel&&G.rep>=n.minRep)t=n.title});return t}
@@ -1148,11 +1444,52 @@ function updateTimeIndicator(){
   const d=document.getElementById('timeDot'),l=document.getElementById('timeLabel');
   if(d)d.className='time-dot '+(G.isNight?'night':'day');
   if(l)l.textContent=G.isNight?'NIGHT':'DAY';
+  document.body.classList.toggle('is-night',G.isNight);
+  document.body.classList.toggle('is-day',!G.isNight);
 }
 
-function processDailyIncome(){let i=getDailyIncome();if(i>0){G.cash+=i;G.totalEarned+=i;showToast(`Daily income: +£${fmt(i)}`,'green')}}
-function processRegen(){const r=sv('m_regen')*2;if(r>0&&G.health<getMaxHP())G.health=Math.min(getMaxHP(),G.health+r)}
-function processWages(){if(G.gameDay%7===0&&G.staff.length>0){const w=G.staff.reduce((s,st)=>{const d=STAFF.find(x=>x.id===st.id);return s+(d?d.wage:0)},0);if(w>0){G.cash-=w;showToast(`Wages: -£${fmt(w)}`,'red')}}}
+function processDailyIncome(){
+  let i=getDailyIncome();
+  if(i>0){G.cash+=i;G.totalEarned+=i;showToast(`Daily income: +£${fmt(i)}`,'green');if(i>=500)showCashAnim(i);}
+  // morale decay
+  G.crewMembers.forEach(m=>{m.morale=Math.max(0,m.morale-1)});
+  // check crew events every 3 days
+  checkCrewEvents();
+  // spawn/process rivals
+  spawnRivals();processRivals();
+  // memory checks
+  if(G.totalEarned>=1000000&&!G.memories.find(m=>m.title==='FIRST MILLION'))pushMemory('FIRST MILLION','💷','Seven figures. Changed everything.');
+  if(G.stats.deals>=50&&!G.memories.find(m=>m.title==='50 DEALS'))pushMemory('50 DEALS','🤝','Half a century of moves.');
+}
+function processRegen(){
+  const r=sv('m_regen')*2+getPropertyUpgradeBonus().regenBonus;
+  if(r>0&&G.health<getMaxHP())G.health=Math.min(getMaxHP(),G.health+r);
+}
+function processWages(){
+  if(G.gameDay%7===0&&G.crewMembers.length>0){
+    const w=G.crewMembers.reduce((s,m)=>{const d=STAFF.find(x=>x.id===m.id);return s+(d?d.wage:0)},0);
+    if(w>0){
+      if(G.cash>=w){
+        G.cash-=w;
+        G.crewMembers.forEach(m=>m.morale=Math.min(100,m.morale+2));
+        showToast(`Wages paid: -£${fmt(w)}`,'red');
+      } else {
+        G.crewMembers.forEach(m=>{m.morale=Math.max(0,m.morale-10);m.loyalty=Math.max(0,m.loyalty-5)});
+        showToast(`Can't pay wages! Crew unhappy.`,'red');
+      }
+    }
+    // defection check
+    const before=G.crewMembers.length;
+    G.crewMembers=G.crewMembers.filter(m=>{
+      if(m.loyalty<20&&Math.random()<0.3){
+        pushCrewMessage(m.name,`${m.name} has walked. Loyalty was too low.`,true);
+        return false;
+      }
+      return true;
+    });
+    if(G.crewMembers.length<before)renderAll();
+  }
+}
 function processTurfIncome(){let i=getTurfIncome();if(i>0){G.cash+=i;G.totalEarned+=i}}
 
 // ==================== PRICES (MEAN REVERSION) ====================
@@ -1173,7 +1510,7 @@ function updatePrices(){
 }
 
 // ==================== RENDER ====================
-function renderAll(){renderStats();renderMarket();renderInventory();renderCharacter();renderBusinesses();renderTurf();renderAssets();renderStaff();renderSkills();renderMissions();renderAchievements();renderProfile();renderHustle()}
+function renderAll(){renderStats();renderMarket();renderInventory();renderCharacter();renderBusinesses();renderTurf();renderAssets();renderStaff();renderGarage();renderProps();renderWarRoom();renderPhone();renderMemories();renderSkills();renderMissions();renderAchievements();renderProfile();renderHustle();renderWantedPoster();}
 
 function renderStats(){
   document.getElementById('cashDisplay').textContent='£'+fmt(G.cash);
@@ -1183,6 +1520,29 @@ function renderStats(){
   document.getElementById('statHealth').textContent=G.health;
   document.getElementById('statIncome').textContent='£'+fmt(getDailyIncome()+getTurfIncome())+'/d';
   document.getElementById('prestigeBadge').innerHTML=G.prestige>0?`<span class="prestige-badge">P${G.prestige}</span>`:'';
+  // active vehicle banner
+  const banner=document.getElementById('activeVehicleBanner');
+  if(banner){
+    if(G.activeVehicle){
+      const v=VEHICLES.find(x=>x.id===G.activeVehicle);
+      const mods=G.vehicleMods[G.activeVehicle]||{};
+      const plate=mods.plate||'';
+      banner.style.display='flex';
+      const artMap={moped:'🛵',golf:'🚗',van:'🚐',bmw:'🚙',range:'🚙',merc:'🚘',lambo:'🏎️'};
+      document.getElementById('activeVehicleBannerIcon').textContent=artMap[G.activeVehicle]||'🚗';
+      document.getElementById('activeVehicleText').textContent=`DRIVING: ${v?v.name.toUpperCase():''}${plate?' · '+plate:''}`;
+    } else {
+      banner.style.display='none';
+    }
+  }
+  // scanner bar at high heat
+  const scannerBar=document.getElementById('scannerBar');
+  if(scannerBar)scannerBar.classList.toggle('show',G.heat>70);
+  const mainEl=document.querySelector('.main');
+  if(mainEl)mainEl.classList.toggle('scanner-active',G.heat>70);
+  // gang name in logo
+  const gnd=document.getElementById('gangNameDisplay');
+  if(gnd)gnd.textContent=G.gangName||'STREET EMPIRE';
 }
 
 function renderMarket(){
@@ -1195,8 +1555,10 @@ function renderMarket(){
     el.innerHTML=u?`<div class="drug-name">${d.name}</div><div class="drug-street-name">${d.street}</div><div class="drug-price">£${p}</div><div class="drug-change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(pct)}%</div><div class="drug-stock">STASH: ${own}</div>${sparkline(h)}`:`<div class="drug-name">???</div><div class="drug-street-name">TIER ${d.tier} - LVL ${[0,0,3,8,15,25][d.tier]}</div><div class="drug-price" style="color:var(--muted)">LOCKED</div>`;
     g.appendChild(el);
   });
-  const ti=DRUGS.filter(d=>tierUnlocked(d.tier)).map(d=>{const p=G.marketPrices[d.id],h=G.priceHistory[d.id],prev=h.length>1?h[h.length-2]:p;return`<span class="ticker-item ${p>=prev?'up':'down'}">${d.name} <span>£${p}</span></span>`}).join('');
-  document.getElementById('tickerInner').innerHTML=ti+ti;
+  const priceItems=DRUGS.filter(d=>tierUnlocked(d.tier)).map(d=>{const p=G.marketPrices[d.id],h=G.priceHistory[d.id],prev=h.length>1?h[h.length-2]:p;return`<span class="ticker-item ${p>=prev?'up':'down'}">${d.name} <span>£${p}</span></span>`});
+  const newsItems=(G.newsHeadlines||[]).map(h=>`<span class="ticker-item"><span style="color:var(--neon-yellow)">📰 ${h}</span></span>`);
+  const all=[...priceItems,...newsItems];
+  document.getElementById('tickerInner').innerHTML=all.join('')+all.join('');
 }
 
 function sparkline(h){
@@ -1243,6 +1605,7 @@ function renderCharacter(){
       <div class="char-slot"><div class="char-slot-label">CRIB</div><div class="char-slot-value">${bestProp?bestProp.icon:'--'}</div><div class="char-slot-name">${bestProp?bestProp.name:'STREETS'}</div></div>
     </div>
     ${bestLux?`<div style="margin-top:10px;font-size:11px;color:var(--neon-purple)">FLEXING: ${bestLux.icon} ${bestLux.name}</div>`:''}
+    <div class="char-lifestyle" style="margin-top:6px;color:var(--neon-cyan)">${(()=>{const nw=getNetWorth();return nw<5000?'TRACKSUIT & TRAINERS':nw<25000?'HOODIE & JOGGERS':nw<100000?'GOLD CHAIN & BOMBER':nw<500000?'DESIGNER SUIT':'BOSS-LEVEL DRIP';})()} </div>
   `;
   document.getElementById('charPower').textContent=getWeaponPower()+(G.trainBoost>0?' (+'+G.trainBoost+')':'');
   document.getElementById('charEscape').textContent=Math.round(getEscapeChance()*100)+'%';
@@ -1283,15 +1646,6 @@ function renderAssets(){
   document.getElementById('luxuryList').innerHTML=LUXURY.map(l=>{const o=G.ownedLuxury.includes(l.id);return`<div class="card ${o?'purple':''}"><div class="card-header"><div class="card-title">${l.icon} ${l.name}</div><div class="card-badge ${o?'badge-purple':'badge-grey'}">${o?'OWNED':'£'+fmt(l.cost)}</div></div><div class="card-desc">${l.desc}</div><div class="card-row"><div class="card-key">REP</div><div class="card-val">+${l.repBonus}</div></div>${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('luxury','${l.id}')" ${G.cash>=l.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
 }
 
-function renderStaff(){
-  const w=G.staff.reduce((s,st)=>{const d=STAFF.find(x=>x.id===st.id);return s+(d?d.wage:0)},0);
-  document.getElementById('wageBill').textContent='£'+fmt(w)+'/wk';
-  document.getElementById('crewSize').textContent=G.staff.length;
-  document.getElementById('staffList').innerHTML='<div class="section-title mb8 mt8">// HIRE</div>'+STAFF.map(s=>{
-    const c=G.staff.filter(st=>st.id===s.id).length;
-    return`<div class="card"><div style="display:flex;gap:12px;align-items:flex-start"><div class="staff-avatar">${s.icon}</div><div style="flex:1"><div class="card-header"><div class="card-title">${s.name}</div><div class="card-badge badge-grey">x${c}</div></div><div class="card-desc">${s.desc}</div><div class="card-row"><div class="card-key">HIRE</div><div class="card-val ${G.cash>=s.cost?'up':'down'}">£${fmt(s.cost)}</div></div><div class="card-row"><div class="card-key">WAGE</div><div class="card-val down">£${fmt(s.wage)}/wk</div></div><button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('staff','${s.id}')" ${G.cash>=s.cost?'':'disabled'}>HIRE</button></div></div></div>`}).join('');
-}
-
 function renderSkills(){
   document.getElementById('skillPointsDisplay').textContent=G.skillPoints+' SP';
   document.getElementById('skillPointsVal').textContent=G.skillPoints;
@@ -1317,23 +1671,6 @@ function renderAchievements(){
   document.getElementById('achGrid').innerHTML=ACHIEVEMENTS.map(a=>{const d=G.achievements.includes(a.id);return`<div class="ach-card ${d?'unlocked':''}"><div class="ach-icon">${a.icon}</div><div class="ach-name">${d?a.name:'???'}</div><div class="ach-desc">${d?a.desc:'Keep playing'}</div>${d?`<div class="ach-reward">+£${fmt(a.reward)}</div>`:''}</div>`}).join('');
 }
 
-function renderProfile(){
-  const xn=G.level*500;
-  document.getElementById('profileName').textContent=G.alias;document.getElementById('notorietyTitle').textContent=getNotoriety();
-  document.getElementById('lifestyleTier').textContent=getLifestyle();document.getElementById('profileLevel').textContent=G.level;
-  document.getElementById('profileXP').textContent=`${G.xp} / ${xn}`;document.getElementById('xpBar').style.width=Math.min(100,(G.xp/xn)*100)+'%';
-  document.getElementById('profileCash').textContent='£'+fmt(G.cash);document.getElementById('profileEarned').textContent='£'+fmt(G.totalEarned);
-  document.getElementById('profileSpent').textContent='£'+fmt(G.totalSpent);document.getElementById('profileNetWorth').textContent='£'+fmt(getNetWorth());
-  document.getElementById('profileHeat').textContent=Math.round(G.heat)+'%';
-  const hf=document.getElementById('heatFill');hf.style.width=G.heat+'%';hf.style.background=G.heat>70?'var(--neon-red)':G.heat>40?'var(--neon-orange)':'var(--neon-green)';
-  document.getElementById('statFightsWon').textContent=G.stats.fightsWon;document.getElementById('statFightsLost').textContent=G.stats.fightsLost;
-  document.getElementById('statMugged').textContent=G.stats.mugged;document.getElementById('statDeals').textContent=G.stats.deals;
-  document.getElementById('statEvents').textContent=G.stats.events;document.getElementById('statDays').textContent=G.stats.days;
-  document.getElementById('statBestTrade').textContent='£'+fmt(G.stats.bestTrade);document.getElementById('statGambleWon').textContent=G.stats.gamblesWon;
-  document.getElementById('prestigeLevel').textContent=G.prestige;document.getElementById('prestigeBonus').textContent='+'+G.prestige*10+'%';
-  document.getElementById('btnPrestige').disabled=G.level<20;
-}
-
 function renderHustle(){
   document.getElementById('coinBetDisplay').textContent='£'+fmt(G.coinBet);
   document.getElementById('hlBetDisplay').textContent='£'+fmt(G.hlBet);
@@ -1357,7 +1694,7 @@ function updateQtyDisplay(){const bp=Math.round(G.marketPrices[currentDrug]*(1-g
 
 function executeTrade(type){
   const p=G.marketPrices[currentDrug],d=DRUGS.find(x=>x.id===currentDrug);
-  const bp=Math.round(p*(1-getBuyDiscount())),sp=Math.round(p*(1+getSellBonus())),chem=G.staff.some(s=>s.id==='chemist')?1.05:1;
+  const bp=Math.round(p*(1-getBuyDiscount())),sp=Math.round(p*(1+getSellBonus())),chem=G.crewMembers.some(m=>m.id==='chemist')?1.05:1;
   if(type==='buymax'){tradeQty=Math.min(Math.floor(G.cash/bp),getCarryCap()-getCurrentCarry());if(tradeQty<=0){showToast("Can't buy",'red');return}type='buy'}
   if(type==='sellall'){tradeQty=G.inventory[currentDrug]||0;if(tradeQty<=0){showToast('Nothing to sell','red');return}type='sell'}
   if(type==='buy'){
@@ -1375,6 +1712,10 @@ function executeTrade(type){
     G.rep=Math.min(300,G.rep+Math.floor((tradeQty/5)*(1+sv('b_rep')*0.2)));G.stats.deals++;
     if(tot>G.stats.bestTrade)G.stats.bestTrade=tot;addXP(tradeQty*3);updMission('deals',1);updMission('sell_drug',tradeQty);updMission('earn',tot);
     showToast(`Sold ${tradeQty}x ${d.name} for £${fmt(tot)}`,'green');
+    if(tot>=500)showCashAnim(tot);
+    if(tot>=2000)pushHeadline('Major deal goes down in South London');
+    // crew deal tracking for runners/chemists
+    G.crewMembers.filter(m=>m.id==='runner'||m.id==='chemist').forEach(m=>m.history.dealsRun++);
   }
   closeModal('tradeModal');checkAchievements();renderAll();
 }
@@ -1393,12 +1734,12 @@ function openPurchase(t,id){
 
 function executePurchase(){
   if(!currentPurchase)return;const{type:t,id}=currentPurchase;let item;
-  if(t==='business'){item=BUSINESSES.find(b=>b.id===id);if(G.ownedBusinesses.includes(id)){showToast('Already owned','red');return}if(G.rep<item.repReq){showToast('Need more rep','red');return}G.ownedBusinesses.push(id)}
+  if(t==='business'){item=BUSINESSES.find(b=>b.id===id);if(G.ownedBusinesses.includes(id)){showToast('Already owned','red');return}if(G.rep<item.repReq){showToast('Need more rep','red');return}G.ownedBusinesses.push(id);if(G.ownedBusinesses.length===1)pushMemory('FIRST BUSINESS','🏪','Went legit — sort of.');}
   else if(t==='weapon'){item=WEAPONS.find(w=>w.id===id);if(G.ownedWeapons.includes(id)){showToast('Already owned','red');return}G.ownedWeapons.push(id);if(item.heatAdd)G.heat=Math.min(100,G.heat+item.heatAdd)}
   else if(t==='vehicle'){item=VEHICLES.find(v=>v.id===id);if(G.ownedVehicles.includes(id)){showToast('Already owned','red');return}G.ownedVehicles.push(id);if(item.repBonus)G.rep+=item.repBonus;if(!G.activeVehicle)G.activeVehicle=id}
   else if(t==='property'){item=PROPERTIES.find(p=>p.id===id);if(G.ownedProperties.includes(id)){showToast('Already owned','red');return}G.ownedProperties.push(id)}
   else if(t==='luxury'){item=LUXURY.find(l=>l.id===id);if(G.ownedLuxury.includes(id)){showToast('Already owned','red');return}G.ownedLuxury.push(id);if(item.repBonus)G.rep=Math.min(300,G.rep+item.repBonus)}
-  else if(t==='staff'){item=STAFF.find(s=>s.id===id);G.staff.push({id})}
+  else if(t==='staff'){item=STAFF.find(s=>s.id===id);G.staff.push({id});G.crewMembers.push(makeFreshCrewMember(id))}
   G.cash-=item.cost;G.totalSpent+=item.cost;addXP(50);showToast(item.name+' acquired!','green');
   closeModal('purchaseModal');checkAchievements();renderAll();
 }
@@ -1414,11 +1755,40 @@ function openTurfModal(id){
   else a.innerHTML='<button class="btn btn-secondary btn-full" disabled>NEED REP '+t.repReq+'</button>';
   document.getElementById('turfModal').classList.add('show');
 }
-function claimTurf(id){const t=TERRITORIES.find(x=>x.id===id);if(G.cash<t.cost){showToast("Not enough",'red');return}closeModal('turfModal');
+function claimTurf(id){
+  const t=TERRITORIES.find(x=>x.id===id);if(G.cash<t.cost){showToast("Not enough",'red');return}closeModal('turfModal');
   const ch=Math.min(0.85,(getWeaponPower()/(t.difficulty*40))+0.15+sv('b_luck')*0.05);
-  if(Math.random()<ch){G.cash-=t.cost;G.totalSpent+=t.cost;G.territories[id]={owned:true};G.rep=Math.min(300,G.rep+10);G.heat=Math.min(100,G.heat+t.difficulty*5);G.stats.fightsWon++;addXP(t.difficulty*50);showToast(t.name+' is yours!','green')}
-  else{G.cash-=Math.floor(t.cost*0.5);G.health=Math.max(10,G.health-t.difficulty*10);G.stats.fightsLost++;G.heat=Math.min(100,G.heat+t.difficulty*8);showToast('Lost the fight for '+t.name,'red')}checkAchievements();renderAll()}
-function buyTurf(id){const t=TERRITORIES.find(x=>x.id===id),c=t.cost*2;if(G.cash<c){showToast("Not enough",'red');return}G.cash-=c;G.totalSpent+=c;G.territories[id]={owned:true};addXP(t.difficulty*30);closeModal('turfModal');showToast(t.name+' purchased!','green');checkAchievements();renderAll()}
+  const cc=G.crewMembers.length;
+  if(Math.random()<ch){
+    G.cash-=t.cost;G.totalSpent+=t.cost;G.territories[id]={owned:true};
+    G.rep=Math.min(300,G.rep+10);G.heat=Math.min(100,G.heat+t.difficulty*5);
+    G.stats.fightsWon++;
+    G.crewMembers.filter(m=>m.id==='enforcer').forEach(m=>m.history.fightsWon++);
+    addXP(t.difficulty*50);
+    const narr=TURF_NARRATIVES_WIN[Math.floor(Math.random()*TURF_NARRATIVES_WIN.length)](t,cc);
+    pushCrewMessage('STREET REPORT',narr);
+    showToast(t.name+' is yours!','green');
+    pushHeadline(`${G.alias||'UNKNOWN'} takes control of ${t.name}`);
+    if(Object.values(G.territories).filter(x=>x.owned).length===1)pushMemory('FIRST TURF','📍','Took the first postcode.');
+  } else {
+    G.cash-=Math.floor(t.cost*0.5);G.health=Math.max(10,G.health-t.difficulty*10);
+    G.stats.fightsLost++;G.heat=Math.min(100,G.heat+t.difficulty*8);
+    const narr=TURF_NARRATIVES_LOSE[Math.floor(Math.random()*TURF_NARRATIVES_LOSE.length)](t);
+    pushCrewMessage('STREET REPORT',narr);
+    showToast('Lost the fight for '+t.name,'red');
+  }
+  checkAchievements();renderAll();
+}
+function buyTurf(id){
+  const t=TERRITORIES.find(x=>x.id===id),c=t.cost*2;if(G.cash<c){showToast("Not enough",'red');return}
+  G.cash-=c;G.totalSpent+=c;G.territories[id]={owned:true};addXP(t.difficulty*30);closeModal('turfModal');
+  const narr=TURF_NARRATIVES_BUY[Math.floor(Math.random()*TURF_NARRATIVES_BUY.length)](t);
+  pushCrewMessage('STREET REPORT',narr);
+  showToast(t.name+' purchased!','green');
+  pushHeadline(`${G.alias||'UNKNOWN'} takes control of ${t.name}`);
+  if(Object.values(G.territories).filter(x=>x.owned).length===1)pushMemory('FIRST TURF','📍','Took the first postcode.');
+  checkAchievements();renderAll();
+}
 
 // ==================== SKILLS ====================
 function buySkill(id){if(G.skillPoints<=0){showToast('No skill points','red');return}let f;Object.values(SKILLS).forEach(b=>b.nodes.forEach(n=>{if(n.id===id)f=n}));if(!f)return;const c=G.skills[id]||0;if(c>=f.maxLevel)return;G.skills[id]=c+1;G.skillPoints--;showToast(f.name+' -> '+(c+1)+'/'+f.maxLevel,'cyan');checkAchievements();renderAll()}
@@ -1445,9 +1815,9 @@ function checkAchievements(){
     luxury_1:()=>G.ownedLuxury.length>=1,luxury_all:()=>G.ownedLuxury.length>=LUXURY.length,
     prestige_1:()=>G.prestige>=1,survive_20:()=>G.stats.events>=20,
     big_trade:()=>G.stats.bestTrade>=10000,huge_trade:()=>G.stats.bestTrade>=50000,
-    staff_5:()=>G.staff.length>=5,gamble_10:()=>G.stats.gamblesWon>=10,
+    staff_5:()=>G.crewMembers.length>=5,gamble_10:()=>G.stats.gamblesWon>=10,
     net_500k:()=>getNetWorth()>=500000,net_2m:()=>getNetWorth()>=2000000};
-  ACHIEVEMENTS.forEach(a=>{if(!G.achievements.includes(a.id)&&ch[a.id]&&ch[a.id]()){G.achievements.push(a.id);G.cash+=a.reward;G.totalEarned+=a.reward;showAchievement(a)}});
+  ACHIEVEMENTS.forEach(a=>{if(!G.achievements.includes(a.id)&&ch[a.id]&&ch[a.id]()){G.achievements.push(a.id);G.cash+=a.reward;G.totalEarned+=a.reward;showAchievement(a);pushHeadline(`${G.alias||'BOSS'}: ${a.name}`);}});
 }
 function showAchievement(a){const p=document.getElementById('achPopup');document.getElementById('achPopupName').textContent=a.icon+' '+a.name;document.getElementById('achPopupDesc').textContent=a.desc+' (+£'+fmt(a.reward)+')';p.classList.add('show');setTimeout(()=>p.classList.remove('show'),4000)}
 
@@ -1523,7 +1893,7 @@ function resolveEvent(eid,act){
     case'beef_negotiate':{G.rep=Math.min(300,G.rep+5);const c=Math.floor(Math.random()*500)+200;G.cash-=Math.min(G.cash,c);showToast(`Split turf. -£${fmt(c)}`,'');break}
     case'beef_retreat':{G.rep=Math.max(0,G.rep-8);showToast('Backed off.','red');break}
     case'tipoff_move':{G.heat=Math.max(0,G.heat-20);addXP(40);showToast('Moved in time.','green');break}
-    case'tipoff_ignore':{if(Math.random()<0.4+lk)showToast('All clear.','green');else{Object.keys(G.inventory).filter(k=>G.inventory[k]>0).forEach(k=>{G.inventory[k]=Math.floor(G.inventory[k]*0.5)});G.heat=Math.min(100,G.heat+25*hm);showToast('Raided. Lost half.','red')}break}
+    case'tipoff_ignore':{if(Math.random()<0.4+lk){showToast('All clear.','green');}else{const pub=getPropertyUpgradeBonus();if(!pub.hasPanicRoom){Object.keys(G.inventory).filter(k=>G.inventory[k]>0).forEach(k=>{G.inventory[k]=Math.floor(G.inventory[k]*0.5)});G.heat=Math.min(100,G.heat+25*hm);showToast('Raided. Lost half.','red');}else{showToast('Raid hit — panic room held.','cyan');}if(G.stashHouseId&&G.ownedProperties.includes(G.stashHouseId)&&Math.random()<0.35){if(!pub.hasPanicRoom){Object.keys(G.inventory).forEach(k=>{G.inventory[k]=Math.floor((G.inventory[k]||0)*0.5)});pushCrewMessage('FEDS','Raid hit the stash house. Half the product gone.',true);}else{pushCrewMessage('CREW','Feds hit the stash but the panic room held.',false);}}}break}
     case'surge_buy':showToast('Prices spiking soon!','green');setTimeout(()=>{DRUGS.forEach(d=>{G.marketPrices[d.id]=Math.round(G.marketPrices[d.id]*(1.4+Math.random()*0.3))});renderMarket()},5000);break;
     case'surge_wait':showToast('Waited.','');break;
     case'celeb_accept':{const r=Math.floor(Math.random()*5000)+3000;G.cash+=r;G.totalEarned+=r;G.rep=Math.min(300,G.rep+10);G.heat=Math.min(100,G.heat+10*hm);addXP(100);updMission('earn',r);showToast(`Celebrity sorted. +£${fmt(r)}`,'green');break}
@@ -1537,20 +1907,79 @@ function resolveEvent(eid,act){
 }
 
 // ==================== XP ====================
-function addXP(a){a=Math.floor(a*(1+sv('h_xp')*0.15));G.xp+=a;while(G.xp>=G.level*500){G.xp-=G.level*500;G.level++;G.health=getMaxHP();G.skillPoints++;showToast(`LEVEL ${G.level}! +1 Skill Point`,'purple');checkAchievements()}}
+function addXP(a){
+  a=Math.floor(a*(1+sv('h_xp')*0.15));G.xp+=a;
+  while(G.xp>=G.level*500){
+    G.xp-=G.level*500;G.level++;G.health=getMaxHP();G.skillPoints++;
+    showToast(`LEVEL ${G.level}! +1 Skill Point`,'purple');
+    if(G.level===10)pushMemory('LEVEL 10','⬆️','The streets know the name.');
+    if(G.level===20)pushMemory('LEVEL 20','👑','Running things properly now.');
+    G.streetBio=generateStreetBio();
+    checkAchievements();
+  }
+}
 function layLow(){if(G.heat<=0){showToast('Heat is zero','');return}G.heat=Math.max(0,G.heat-10);G.rep=Math.max(0,G.rep-2);showToast('Heat -10, rep -2','');renderAll()}
 
 // ==================== PRESTIGE ====================
-function doPrestige(){if(G.level<20){showToast('Need level 20+','red');return}if(!confirm('PRESTIGE: Reset for +10% income. Proceed?'))return;
-  const np=G.prestige+1,ka=[...G.achievements],ks={...G.stats};
-  G=JSON.parse(JSON.stringify(DS));G.prestige=np;G.achievements=ka;G.stats=ks;G.aliasSet=true;G.alias='UNKNOWN';
+function doPrestige(){
+  if(G.level<20){showToast('Need level 20+','red');return}
+  if(!confirm('PRESTIGE: Reset for +10% income. Proceed?'))return;
+  showPrestigeCeremony();
+}
+function showPrestigeCeremony(){
+  const overlay=document.createElement('div');
+  overlay.id='prestigeOverlay';
+  overlay.style.cssText='position:fixed;inset:0;background:#000;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px;';
+  const turfsHeld=Object.values(G.territories||{}).filter(t=>t.owned).length;
+  overlay.innerHTML=`
+    <div style="font-family:var(--heading);font-size:42px;color:var(--neon-purple);letter-spacing:4px;text-shadow:0 0 30px rgba(185,78,255,0.6)">PRESTIGE ${G.prestige+1}</div>
+    <div style="font-family:var(--heading);font-size:14px;color:var(--muted);letter-spacing:3px;margin:12px 0">YOUR LEGEND GROWS</div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);padding:16px;border-radius:4px;margin:16px 0;width:100%;max-width:280px">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px">FINAL STATS</div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--neon-cyan)">${G.stats.deals} DEALS MADE</div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--neon-yellow)">${G.stats.fightsWon} FIGHTS WON</div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--neon-green)">£${fmt(G.totalEarned)} TOTAL EARNED</div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--gang-colour,#ff0066)">${turfsHeld} TURFS HELD</div>
+    </div>
+    <div style="font-family:var(--sans);font-size:13px;color:var(--muted);max-width:280px;line-height:1.6;margin-bottom:20px">The streets will remember. The empire resets, but your legacy stays. +10% income bonus unlocked.</div>
+    <div id="prestigeCountdown" style="font-family:var(--heading);font-size:20px;letter-spacing:3px;color:var(--neon-pink)">RESETTING IN 5...</div>`;
+  document.body.appendChild(overlay);
+  let count=5;
+  const iv=setInterval(()=>{
+    count--;
+    const cd=document.getElementById('prestigeCountdown');
+    if(cd)cd.textContent=count>0?`RESETTING IN ${count}...`:'STARTING FRESH...';
+    if(count<=0){clearInterval(iv);overlay.remove();actualDoPrestige();}
+  },1000);
+}
+function actualDoPrestige(){
+  const np=G.prestige+1,ka=[...G.achievements],ks={...G.stats},km=[...G.memories],gn=G.gangName,gc=G.gangColour;
+  G=JSON.parse(JSON.stringify(DS));G.prestige=np;G.achievements=ka;G.stats=ks;G.memories=km;
+  G.gangName=gn;G.gangColour=gc;G.aliasSet=true;G.alias='UNKNOWN';
+  G.crewMembers=[];G.crewMessages=[];G.newsHeadlines=[];G.rivals=[];
   DRUGS.forEach(d=>{G.marketPrices[d.id]=d.basePrice;G.priceHistory[d.id]=[d.basePrice]});
-  generateMissions();showToast(`PRESTIGE ${np}! +${np*10}% income`,'purple');checkAchievements();renderAll();saveGame()}
+  pushMemory('PRESTIGE','🌟','Reset the board. Legacy intact.');
+  pushHeadline(`${G.alias||'BOSS'} rebuilds the empire from scratch`);
+  applyGangColour(G.gangColour);
+  generateMissions();showToast(`PRESTIGE ${np}! +${np*10}% income`,'purple');checkAchievements();renderAll();saveGame();
+}
 
 // ==================== NAV ====================
-function switchTab(tab){activeTab=tab;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+tab).classList.add('active');const tabs=['market','inventory','character','businesses','turf','assets','staff','hustle','skills','missions','achievements','profile'];
-  document.querySelectorAll('.nav-tab')[tabs.indexOf(tab)]?.classList.add('active')}
+function switchTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const pg=document.getElementById('page-'+tab);
+  if(pg)pg.classList.add('active');
+  const tabs=['market','inventory','character','businesses','turf','assets','staff','garage','props','warroom','phone','memories','hustle','skills','missions','achievements','profile'];
+  const idx=tabs.indexOf(tab);
+  if(idx>=0)document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  if(tab==='phone')renderPhone();
+  if(tab==='garage')renderGarage();
+  if(tab==='props')renderProps();
+  if(tab==='warroom')renderWarRoom();
+  if(tab==='memories')renderMemories();
+}
 function switchSection(s){document.querySelectorAll('.bottom-btn').forEach(b=>b.classList.remove('active'));document.getElementById('bb-'+s)?.classList.add('active');
   if(s==='market')switchTab('market');else if(s==='character')switchTab('character');else if(s==='hustle')switchTab('hustle');else if(s==='profile')switchTab('profile')}
 
@@ -1561,6 +1990,486 @@ let toastTimeout;
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.classList.remove('show'),3000)}
 
 function resetGame(){if(confirm('Wipe save?')){localStorage.removeItem('manors_v3');G=JSON.parse(JSON.stringify(DS));DRUGS.forEach(d=>{G.marketPrices[d.id]=d.basePrice;G.priceHistory[d.id]=[d.basePrice]});generateMissions();renderAll();showToast('Wiped.','')}}
+
+// ==================== CREW CARDS ====================
+function renderStaff(){
+  const wages=G.crewMembers.reduce((s,m)=>{const d=STAFF.find(x=>x.id===m.id);return s+(d?d.wage:0)},0);
+  const summary=document.getElementById('crewSummary');
+  if(summary)summary.textContent=`CREW: ${G.crewMembers.length} members — Weekly wages: £${fmt(wages)}`;
+  const container=document.getElementById('crewCardsContainer');
+  if(container){
+    if(G.crewMembers.length===0){container.innerHTML='<div class="empty-state">NO CREW YET — HIRE BELOW</div>';}
+    else{
+      container.innerHTML=G.crewMembers.map(m=>{
+        const st=STAFF.find(x=>x.id===m.id)||{name:m.id,icon:'👤'};
+        const loyCol=m.loyalty>70?'var(--neon-green)':m.loyalty>40?'var(--neon-yellow)':'var(--neon-red)';
+        const arrestBadge=m.history.arrests>0?`<span class="card-badge badge-red" style="font-size:8px;margin-top:4px;display:inline-block">ARRESTED x${m.history.arrests}</span>`:'';
+        return`<div class="crew-card" style="border-left-color:var(--gang-colour,#ff0066)">
+          <div class="crew-card-top">
+            <div class="crew-card-portrait">${st.icon}</div>
+            <div class="crew-card-info">
+              <div class="crew-card-name">${m.name}</div>
+              <span class="crew-card-role badge-grey card-badge">${st.name}</span>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="fireCrewMember('${m.uid}')">FIRE</button>
+          </div>
+          <div class="crew-loyalty-label">LOYALTY <span>${m.loyalty}%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${m.loyalty}%;background:${loyCol}"></div></div>
+          <div class="crew-card-stats">Hired day ${m.hireDay} · ${m.history.dealsRun} deals · ${m.history.fightsWon} wins · Morale ${m.morale}%</div>
+          ${arrestBadge}
+        </div>`;
+      }).join('');
+    }
+  }
+  // hire section
+  const list=document.getElementById('staffList');
+  if(list){
+    list.innerHTML=STAFF.map(s=>{
+      const c=G.crewMembers.filter(m=>m.id===s.id).length;
+      return`<div class="card"><div style="display:flex;gap:12px;align-items:flex-start"><div class="staff-avatar">${s.icon}</div><div style="flex:1"><div class="card-header"><div class="card-title">${s.name}</div><div class="card-badge badge-grey">x${c}</div></div><div class="card-desc">${s.desc}</div><div class="card-row"><div class="card-key">HIRE</div><div class="card-val ${G.cash>=s.cost?'up':'down'}">£${fmt(s.cost)}</div></div><div class="card-row"><div class="card-key">WAGE</div><div class="card-val down">£${fmt(s.wage)}/wk</div></div><button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('staff','${s.id}')" ${G.cash>=s.cost?'':'disabled'}>HIRE</button></div></div></div>`;
+    }).join('');
+  }
+}
+
+function fireCrewMember(uid){
+  const m=G.crewMembers.find(x=>x.uid===uid);
+  if(!m)return;
+  G.crewMembers=G.crewMembers.filter(x=>x.uid!==uid);
+  // also remove from legacy staff array
+  const idx=G.staff.findIndex(s=>s.id===m.id);
+  if(idx>=0)G.staff.splice(idx,1);
+  pushHeadline(`${m.name} fired from the crew`);
+  showToast(`${m.name} fired.`,'red');
+  renderAll();saveGame();
+}
+
+// ==================== GARAGE ====================
+function renderGarage(){
+  const el=document.getElementById('garagePageContent');
+  if(!el)return;
+  const owned=VEHICLES.filter(v=>G.ownedVehicles.includes(v.id));
+  if(owned.length===0){el.innerHTML='<div class="empty-state">NO VEHICLES<br>HEAD TO THE ASSETS TAB</div>';return;}
+  const VEHICLE_ART={moped:'🛵',golf:'🚗',van:'🚐',bmw:'🚙',range:'🚙',merc:'🚘',lambo:'🏎️'};
+  el.innerHTML=owned.map(v=>{
+    const mods=G.vehicleMods[v.id]||{};
+    const isActive=G.activeVehicle===v.id;
+    const paintBg=mods.paint?`background:linear-gradient(135deg,${mods.paint}22,${mods.paint}44)`:'';
+    return`<div class="garage-card-new ${isActive?'garage-card-active':''}" style="${paintBg}">
+      <div class="garage-card-header">
+        <div style="font-family:var(--heading);font-size:11px;color:var(--muted);letter-spacing:2px">${v.name.toUpperCase()}</div>
+        ${isActive?'<span class="card-badge badge-green">ACTIVE</span>':''}
+      </div>
+      <div class="garage-art">${VEHICLE_ART[v.id]||'🚗'}</div>
+      <div class="garage-plate">${mods.plate||'NO PLATE'}</div>
+      <div class="garage-stats">
+        <span>🚀 ESC +${Math.round((v.escapeBonus||0)*100)}%</span>
+        <span>📦 +${v.carryBonus||0} CARRY</span>
+        ${v.repBonus?`<span>⭐ +${v.repBonus} REP</span>`:''}
+      </div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-secondary" onclick="openCustomiseVehicle('${v.id}')">CUSTOMISE</button>
+        <button class="btn ${isActive?'btn-danger':'btn-primary'}" onclick="setActiveVehicleGarage('${v.id}')">${isActive?'PARK IT':'DRIVE'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setActiveVehicleGarage(vid){
+  G.activeVehicle=(G.activeVehicle===vid)?null:vid;
+  showToast(G.activeVehicle?'Ride activated.':'Parked up.','cyan');
+  renderAll();saveGame();
+}
+
+// ==================== VEHICLE CUSTOMISATION ====================
+let vcCurrentVehicleId=null,vcTempMods={};
+
+function openCustomiseVehicle(vid){
+  vcCurrentVehicleId=vid;
+  const v=VEHICLES.find(x=>x.id===vid);
+  const existing=G.vehicleMods[vid]||{};
+  vcTempMods=Object.assign({paint:'#111111',plate:'',tints:false,rims:'stock'},existing);
+  document.getElementById('vcModalTitle').textContent='CUSTOMISE — '+v.name.toUpperCase();
+  document.getElementById('vcPlateInput').value=vcTempMods.plate||'';
+  document.getElementById('vcTintsBtn').textContent=vcTempMods.tints?'ON':'OFF';
+  document.getElementById('vcTintsBtn').className=vcTempMods.tints?'btn btn-cyan':'btn btn-secondary';
+  const swatchesEl=document.getElementById('vcPaintSwatches');
+  swatchesEl.innerHTML=PAINT_OPTIONS.map(p=>`<div onclick="selectVCPaint('${p.hex}')" style="width:40px;height:40px;background:${p.hex};border-radius:4px;cursor:pointer;border:2px solid ${vcTempMods.paint===p.hex?'var(--neon-cyan)':'transparent'};position:relative" title="${p.name}">${p.heatMod<0?'<span style="position:absolute;bottom:1px;right:2px;font-size:7px">❄️</span>':''}${p.repBonus>0?'<span style="position:absolute;bottom:1px;right:2px;font-size:7px">⭐</span>':''}</div>`).join('');
+  const rimsEl=document.getElementById('vcRimsRow');
+  rimsEl.innerHTML=RIMS_OPTIONS.map(r=>`<button onclick="selectVCRims('${r.id}')" class="btn ${vcTempMods.rims===r.id?'btn-cyan':'btn-secondary'}" style="flex:1;font-size:10px">${r.name}</button>`).join('');
+  updateVCPreview();
+  document.getElementById('vehicleCustomModal').classList.add('show');
+}
+function selectVCPaint(hex){vcTempMods.paint=hex;openCustomiseVehicle(vcCurrentVehicleId);}
+function selectVCRims(rimId){vcTempMods.rims=rimId;openCustomiseVehicle(vcCurrentVehicleId);}
+function toggleVCTints(){vcTempMods.tints=!vcTempMods.tints;document.getElementById('vcTintsBtn').textContent=vcTempMods.tints?'ON':'OFF';document.getElementById('vcTintsBtn').className=vcTempMods.tints?'btn btn-cyan':'btn btn-secondary';updateVCPreview();}
+function updateVCPreview(){
+  const paint=PAINT_OPTIONS.find(p=>p.hex===vcTempMods.paint)||PAINT_OPTIONS[0];
+  const rims=RIMS_OPTIONS.find(r=>r.id===vcTempMods.rims)||RIMS_OPTIONS[0];
+  let heatTotal=(paint.heatMod||0)+(rims.heatMod||0)+(vcTempMods.tints?-0.03:0);
+  let repTotal=(paint.repBonus||0)+(rims.repBonus||0);
+  heatTotal=Math.max(heatTotal,-0.08);
+  const el=document.getElementById('vcEffectPreview');
+  if(el)el.innerHTML=`<div class="card-row"><span class="card-key">HEAT MOD</span><span class="card-val ${heatTotal<0?'up':'down'}">${heatTotal<0?'':'+'}${Math.round(heatTotal*100)}%</span></div><div class="card-row"><span class="card-key">REP BONUS</span><span class="card-val up">+${repTotal}</span></div><div class="card-row"><span class="card-key">PAINT</span><span class="card-val">${paint.name}</span></div><div class="card-row"><span class="card-key">RIMS</span><span class="card-val">${rims.name}</span></div><div class="card-row"><span class="card-key">TINTS</span><span class="card-val">${vcTempMods.tints?'YES':'NO'}</span></div>`;
+}
+function saveVehicleMods(){
+  const plate=document.getElementById('vcPlateInput').value.toUpperCase().replace(/[^A-Z0-9 ]/g,'').slice(0,7);
+  vcTempMods.plate=plate;
+  G.vehicleMods[vcCurrentVehicleId]=Object.assign({},vcTempMods);
+  closeModal('vehicleCustomModal');showToast('Ride customised.','cyan');renderAll();saveGame();
+}
+function getVehicleModBonus(vehicleId){
+  if(!vehicleId)return{heatMod:0,repBonus:0};
+  const mods=G.vehicleMods[vehicleId]||{};
+  const paint=PAINT_OPTIONS.find(p=>p.hex===mods.paint)||{heatMod:0,repBonus:0};
+  const rims=RIMS_OPTIONS.find(r=>r.id===mods.rims)||{heatMod:0,repBonus:0};
+  let heatMod=(paint.heatMod||0)+(rims.heatMod||0)+(mods.tints?-0.03:0);
+  heatMod=Math.max(heatMod,-0.08);
+  return{heatMod,repBonus:(paint.repBonus||0)+(rims.repBonus||0)};
+}
+
+// ==================== PROPERTY UPGRADES ====================
+function getPropertyUpgradeBonus(){
+  let heatReduce=0,carryBonus=0,regenBonus=0,hasPanicRoom=false;
+  G.ownedProperties.forEach(pid=>{
+    const u=G.propertyUpgrades[pid]||{};
+    heatReduce+=(u.cctv||0)*0.03+(u.soundproofing||0)*0.02;
+    carryBonus+=(u.hiddenStash||0)*30;
+    regenBonus+=(u.gym||0)*1;
+    if(u.panicRoom)hasPanicRoom=true;
+  });
+  return{heatReduce:Math.min(heatReduce,0.15),carryBonus,regenBonus,hasPanicRoom};
+}
+let puCurrentPropId=null;
+function openPropUpgrade(propId){
+  puCurrentPropId=propId;
+  const p=PROPERTIES.find(x=>x.id===propId);
+  document.getElementById('puModalTitle').textContent=p.name.toUpperCase()+' — UPGRADES';
+  document.getElementById('puModalSub').textContent=p.desc||'';
+  const upgrades=G.propertyUpgrades[propId]||{};
+  const list=document.getElementById('puUpgradeList');
+  list.innerHTML=Object.entries(PROPERTY_UPGRADE_DEFS).map(([key,def])=>{
+    const currentLevel=upgrades[key]||0;
+    const maxed=currentLevel>=def.maxLevel;
+    const nextCost=maxed?0:def.costs[currentLevel];
+    return`<div class="card" style="margin-bottom:8px"><div class="card-header"><div class="card-title">${def.icon} ${def.name}</div><span class="card-badge badge-grey">LVL ${currentLevel}/${def.maxLevel}</span></div><div class="card-desc">${def.desc}</div>${maxed?'<span class="card-badge badge-green">MAXED</span>':`<button class="btn btn-primary btn-full" onclick="buyPropUpgrade('${propId}','${key}')" ${G.cash<nextCost?'disabled':''}>UPGRADE — £${fmt(nextCost)}</button>`}</div>`;
+  }).join('');
+  document.getElementById('propUpgradeModal').classList.add('show');
+}
+function buyPropUpgrade(propId,upgradeKey){
+  if(!G.propertyUpgrades[propId])G.propertyUpgrades[propId]={};
+  const currentLevel=G.propertyUpgrades[propId][upgradeKey]||0;
+  const def=PROPERTY_UPGRADE_DEFS[upgradeKey];
+  if(currentLevel>=def.maxLevel)return;
+  const cost=def.costs[currentLevel];
+  if(G.cash<cost){showToast('Not enough cash.','red');return;}
+  G.cash-=cost;G.propertyUpgrades[propId][upgradeKey]=currentLevel+1;
+  showToast(`${def.name} upgraded to level ${currentLevel+1}.`,'cyan');
+  openPropUpgrade(propId);renderAll();saveGame();
+}
+
+// ==================== PROPS TAB ====================
+function renderProps(){
+  const el=document.getElementById('page-props');if(!el)return;
+  const owned=PROPERTIES.filter(p=>G.ownedProperties.includes(p.id));
+  const available=PROPERTIES.filter(p=>!G.ownedProperties.includes(p.id));
+  let html='';
+  if(owned.length>0){
+    html+='<div class="section-header"><div class="section-title">YOUR PROPERTIES</div></div>';
+    html+=owned.map(p=>{
+      const upgrades=G.propertyUpgrades[p.id]||{};
+      const isStash=G.stashHouseId===p.id;
+      return`<div class="card ${isStash?'orange':''}"><div class="card-header"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:24px">${p.icon}</span><div><div class="card-title">${p.name}</div><div style="font-size:10px;color:var(--muted)">${p.desc}</div></div></div>${isStash?'<span class="card-badge badge-orange">STASH</span>':''}</div><div style="display:flex;gap:6px;margin:8px 0;flex-wrap:wrap">${Object.entries(PROPERTY_UPGRADE_DEFS).map(([k,d])=>`<span title="${d.name}: Lvl ${upgrades[k]||0}" style="opacity:${(upgrades[k]||0)>0?1:0.25};font-size:16px">${d.icon}</span>`).join('')}</div><div class="card-row"><span class="card-key">DAILY INCOME</span><span class="card-val up">£${fmt(p.dailyIncome)}</span></div><div class="card-row"><span class="card-key">CARRY BONUS</span><span class="card-val">+${p.carryBonus||0}</span></div><div class="btn-row" style="margin-top:8px"><button class="btn btn-secondary" onclick="openPropUpgrade('${p.id}')">UPGRADE</button><button class="btn ${isStash?'btn-danger':'btn-orange'}" onclick="setStashHouse('${p.id}')">${isStash?'UNSTASH':'SET STASH'}</button></div></div>`;
+    }).join('');
+  }
+  if(available.length>0){
+    html+='<div class="section-header" style="margin-top:16px"><div class="section-title">AVAILABLE PROPERTIES</div></div>';
+    html+=available.map(p=>{
+      const locked=G.rep<(p.repReq||0);
+      return`<div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:24px">${p.icon}</span><div><div class="card-title">${p.name}</div><div style="font-size:10px;color:var(--muted)">${p.desc}</div></div></div>${locked?`<span class="card-badge badge-red">REP ${p.repReq}</span>`:''}</div><div class="card-row"><span class="card-key">COST</span><span class="card-val">£${fmt(p.cost)}</span></div><div class="card-row"><span class="card-key">DAILY</span><span class="card-val up">£${fmt(p.dailyIncome)}</span></div><button class="btn btn-primary btn-full" style="margin-top:8px" onclick="openPurchase('property','${p.id}')" ${locked||G.cash<p.cost?'disabled':''}>BUY — £${fmt(p.cost)}</button></div>`;
+    }).join('');
+  }
+  if(!owned.length&&!available.length)html='<div class="empty-state">NO PROPERTIES YET</div>';
+  el.innerHTML=html;
+}
+
+// executePurchase already defined above — props tab calls openPurchase then modal handles it
+
+function setStashHouse(propId){
+  if(G.stashHouseId===propId){G.stashHouseId=null;showToast('Stash house cleared.','cyan');}
+  else{
+    const highTier=['house','penthouse','mansion','compound'];
+    if(!highTier.includes(propId)){showToast('Only use a proper yard as stash.','red');return;}
+    G.stashHouseId=propId;
+    pushHeadline(`${G.alias||'THE BOSS'} set up a stash house`);
+    showToast('Stash house set. +200 carry. High risk.','orange');
+  }
+  renderAll();saveGame();
+}
+
+// ==================== WAR ROOM ====================
+function renderWarRoom(){
+  const el=document.getElementById('page-warroom');if(!el)return;
+  const ownedTurfs=TERRITORIES.filter(t=>G.territories[t.id]&&G.territories[t.id].owned);
+  const totalTurfIncome=getTurfIncome();
+  const dailyBusinessIncome=getDailyIncome();
+  const weeklyWages=G.crewMembers.reduce((s,m)=>{const st=STAFF.find(x=>x.id===m.id);return s+(st?st.wage:0)},0);
+  const rivals=G.rivals||[];
+  el.innerHTML=`
+    <div class="section-header"><div class="section-title">EMPIRE OVERVIEW</div></div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">🗺️ TERRITORY MAP</div></div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px">
+        ${TERRITORIES.map(t=>{const owned=G.territories[t.id]&&G.territories[t.id].owned;return`<div onclick="openTurfModal('${t.id}')" style="background:${owned?'var(--gang-colour,#ff0066)':'rgba(255,255,255,0.03)'};border:1px solid ${owned?'var(--gang-colour,#ff0066)':'var(--border)'};border-radius:4px;padding:8px 4px;text-align:center;cursor:pointer;transition:all 0.2s"><div style="font-size:16px">${t.icon||'📍'}</div><div style="font-size:7px;font-family:var(--heading);letter-spacing:1px;margin-top:2px;color:${owned?'white':'var(--muted)'}">${t.name.split(' ')[0].toUpperCase()}</div></div>`;}).join('')}
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:var(--muted);font-family:var(--mono)">${ownedTurfs.length}/${TERRITORIES.length} TERRITORIES CONTROLLED</div>
+    </div>
+    <div class="card cyan">
+      <div class="card-header"><div class="card-title">💰 INCOME BREAKDOWN</div></div>
+      <div class="card-row"><span class="card-key">BUSINESSES</span><span class="card-val up">£${fmt(dailyBusinessIncome)}/day</span></div>
+      <div class="card-row"><span class="card-key">TERRITORIES</span><span class="card-val up">£${fmt(totalTurfIncome)}/day</span></div>
+      <div class="card-row"><span class="card-key">CREW WAGES</span><span class="card-val down">-£${fmt(weeklyWages)}/week</span></div>
+      <div class="card-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="card-key">NET WEEKLY</span><span class="card-val up">£${fmt((dailyBusinessIncome+totalTurfIncome)*7-weeklyWages)}</span></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">📊 EMPIRE STATS</div></div>
+      <div class="card-row"><span class="card-key">CREW SIZE</span><span class="card-val">${G.crewMembers.length} MEMBERS</span></div>
+      <div class="card-row"><span class="card-key">FLEET</span><span class="card-val">${G.ownedVehicles.length} VEHICLES</span></div>
+      <div class="card-row"><span class="card-key">PROPERTIES</span><span class="card-val">${G.ownedProperties.length} OWNED</span></div>
+      <div class="card-row"><span class="card-key">BUSINESSES</span><span class="card-val">${G.ownedBusinesses.length} RUNNING</span></div>
+      <div class="card-row"><span class="card-key">NET WORTH</span><span class="card-val up">£${fmt(getNetWorth())}</span></div>
+    </div>
+    ${rivals.length>0?`<div class="section-header"><div class="section-title">KNOWN RIVALS</div></div>${rivals.map(r=>`<div class="card red"><div class="card-header"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:24px">${r.icon}</span><div><div class="card-title">${r.name}</div><div style="font-size:10px;color:var(--muted)">${r.area} — REP ${r.rep}</div></div></div><span class="card-badge badge-red">THREAT ${r.threatLevel}</span></div><div class="progress-bar"><div class="progress-fill red" style="width:${Math.min(100,r.rep/3)}%"></div></div></div>`).join('')}`:''}`;
+}
+
+// ==================== PHONE ====================
+function pushCrewMessage(from,text,isAlert){
+  if(!G.crewMessages)G.crewMessages=[];
+  G.crewMessages.unshift({from,text,day:G.gameDay,read:false,alert:!!isAlert});
+  if(G.crewMessages.length>50)G.crewMessages.pop();
+  const dot=document.getElementById('phoneNotifDot');
+  if(dot)dot.style.display='inline-block';
+}
+function renderPhone(){
+  const el=document.getElementById('page-phone');if(!el)return;
+  (G.crewMessages||[]).forEach(m=>m.read=true);
+  const dot=document.getElementById('phoneNotifDot');
+  if(dot)dot.style.display='none';
+  if(!G.crewMessages||G.crewMessages.length===0){
+    el.innerHTML=`<div style="font-family:var(--heading);font-size:11px;letter-spacing:3px;color:var(--muted);padding:12px 0;margin-bottom:16px">📱 CREW MESSAGES</div><div class="empty-state">NO MESSAGES YET<br>MESSAGES FROM YOUR CREW APPEAR HERE</div>`;
+    return;
+  }
+  el.innerHTML=`<div style="font-family:var(--heading);font-size:11px;letter-spacing:3px;color:var(--muted);padding:12px 0 8px;margin-bottom:8px;border-bottom:1px solid var(--border)">📱 CREW MESSAGES</div><div class="sms-thread">${(G.crewMessages||[]).map(m=>`<div class="sms-bubble ${m.alert?'sms-alert':''}"><div class="sms-header"><span class="sms-sender">${m.from}</span><span class="sms-day">DAY ${m.day}</span></div><div class="sms-text">${m.text}</div></div>`).join('')}</div>`;
+}
+
+// ==================== MEMORIES ====================
+function pushMemory(title,icon,desc){
+  if(!G.memories)G.memories=[];
+  if(G.memories.find(m=>m.title===title))return;
+  G.memories.unshift({title,icon,desc,day:G.gameDay});
+}
+function renderMemories(){
+  const el=document.getElementById('page-memories');if(!el)return;
+  if(!G.memories||G.memories.length===0){el.innerHTML='<div class="section-title" style="margin-bottom:16px">PHOTO WALL</div><div class="empty-state">NO MEMORIES YET<br>BUILD YOUR EMPIRE</div>';return;}
+  el.innerHTML=`<div class="section-title" style="margin-bottom:16px">PHOTO WALL</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${G.memories.map(m=>`<div class="memory-card"><div class="memory-icon">${m.icon}</div><div class="memory-title">${m.title}</div><div class="memory-day">DAY ${m.day}</div><div class="memory-desc">${m.desc}</div></div>`).join('')}</div>`;
+}
+
+// ==================== WANTED POSTER ====================
+function renderWantedPoster(){
+  const el=document.getElementById('wantedPoster');if(!el)return;
+  const heatLabel=G.heat<20?'CLEAR':G.heat<40?'LOW RISK':G.heat<60?'CAUTION':G.heat<80?'WANTED':'EXTREMELY DANGEROUS';
+  const heatColour=G.heat<20?'var(--neon-green)':G.heat<40?'var(--neon-yellow)':G.heat<60?'var(--neon-orange)':'var(--neon-red)';
+  const bounty=Math.floor(G.rep*G.heat*10);
+  const crimes=[];
+  if(G.stats.deals>10)crimes.push('DRUG SUPPLY');
+  if(G.stats.deals>50)crimes.push('TRAFFICKING');
+  if(G.stats.fightsWon>5)crimes.push('GBH');
+  if(G.stats.fightsWon>20)crimes.push('GRIEVOUS BODILY HARM');
+  if(Object.values(G.territories||{}).filter(t=>t.owned).length>3)crimes.push('GANG RACKETEERING');
+  if(G.prestige>0)crimes.push('ORGANISED CRIME');
+  if(crimes.length===0)crimes.push('KNOWN ASSOCIATE');
+  el.innerHTML=`<div style="background:rgba(255,230,0,0.03);border:2px solid rgba(255,230,0,0.15);padding:16px;border-radius:4px;text-align:center"><div style="font-family:var(--heading);font-size:9px;letter-spacing:4px;color:var(--muted);margin-bottom:4px">MET POLICE — OPERATION MANOR</div><div style="font-family:var(--heading);font-size:20px;color:var(--neon-yellow);letter-spacing:4px;margin-bottom:8px">WANTED</div><div style="width:80px;height:80px;background:rgba(255,255,255,0.05);border:2px dashed rgba(255,255,255,0.1);border-radius:4px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:36px">👤</div><div style="font-family:var(--heading);font-size:18px;color:var(--text);letter-spacing:2px">${(G.alias||'UNKNOWN').toUpperCase()}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:12px">${getNotoriety()}</div><div style="font-size:9px;color:${heatColour};font-family:var(--heading);letter-spacing:3px;margin-bottom:8px">${heatLabel}</div><div style="font-family:var(--mono);font-size:11px;color:var(--neon-yellow);margin-bottom:10px">BOUNTY: £${fmt(bounty)}</div><div style="font-size:9px;color:var(--muted);font-family:var(--heading);letter-spacing:2px;margin-bottom:4px">KNOWN OFFENCES</div><div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center">${crimes.map(c=>`<span style="font-size:8px;font-family:var(--mono);padding:2px 6px;background:rgba(255,34,68,0.1);border:1px solid rgba(255,34,68,0.2);border-radius:2px;color:var(--neon-red)">${c}</span>`).join('')}</div></div>`;
+}
+
+// ==================== GANG NAME & COLOUR ====================
+function applyGangColour(hex){
+  G.gangColour=hex;
+  document.documentElement.style.setProperty('--gang-colour',hex);
+  saveGame();
+}
+function updateGangName(name){
+  G.gangName=name||'THE FIRM';
+  const gnd=document.getElementById('gangNameDisplay');
+  if(gnd)gnd.textContent=G.gangName;
+  saveGame();
+}
+
+// ==================== STREET BIO ====================
+function generateStreetBio(){
+  const notoriety=getNotoriety();
+  const name=G.alias||'The Boss';
+  const gang=G.gangName||'THE FIRM';
+  const turfsOwned=Object.values(G.territories||{}).filter(t=>t.owned).length;
+  const dealsTotal=G.stats?G.stats.deals:0;
+  let bio=`Known on the streets as ${name}. `;
+  if(G.level<5)bio+=`${gang} is just getting started, but the name is spreading.`;
+  else if(G.level<10)bio+=`Running ${gang} out of South London. ${dealsTotal} deals deep and rising.`;
+  else if(G.level<20)bio+=`${gang} controls ${turfsOwned} turf${turfsOwned!==1?'s':''} across London. The feds know the name.`;
+  else bio+=`${gang} is a legend. ${turfsOwned} turfs. ${dealsTotal}+ deals. The streets answer to one name.`;
+  if(G.prestige>0)bio+=` Rebuilt the empire ${G.prestige} time${G.prestige!==1?'s':''}.`;
+  return bio;
+}
+
+// ==================== NEWS HEADLINES ====================
+function pushHeadline(text){
+  if(!G.newsHeadlines)G.newsHeadlines=[];
+  G.newsHeadlines.unshift(text);
+  if(G.newsHeadlines.length>10)G.newsHeadlines.pop();
+}
+
+// ==================== CASH ANIMATION ====================
+function showCashAnim(amount){
+  if(amount<500)return;
+  const el=document.createElement('div');
+  el.className='cash-anim';
+  el.textContent='+£'+fmt(amount);
+  el.style.left=(20+Math.random()*60)+'vw';
+  el.style.top='45vh';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1600);
+}
+
+// ==================== CREW EVENTS ====================
+function checkCrewEvents(){
+  if(G.crewMembers.length===0||G.pendingCrewEvent)return;
+  if(G.gameDay%3!==0)return;
+  if(Math.random()>0.6)return;
+  const member=G.crewMembers[Math.floor(Math.random()*G.crewMembers.length)];
+  const eventPool=CREW_EVENTS[member.id]||CREW_EVENTS.generic;
+  const ev=eventPool[Math.floor(Math.random()*eventPool.length)];
+  G.pendingCrewEvent={uid:member.uid,eventId:ev.id};
+  showCrewEventModal(member,ev);
+  saveGame();
+}
+function showCrewEventModal(member,ev){
+  document.getElementById('eventIcon').textContent=ev.icon;
+  document.getElementById('eventTitle').textContent=ev.title;
+  document.getElementById('eventDesc').textContent=ev.desc(member);
+  document.getElementById('eventOptions').innerHTML=ev.options.map(o=>`<div class="event-option" onclick="resolveCrewEvent('${member.uid}','${o.action}')"><div class="event-option-text">${o.text}</div><div class="event-option-risk ${o.risk==='HIGH'?'badge-red':o.risk==='MED'?'badge-yellow':o.risk==='LOW'?'badge-green':'badge-grey'} card-badge">${o.risk}</div></div>`).join('');
+  document.getElementById('eventModal').classList.add('show');
+}
+function resolveCrewEvent(uid,action){
+  const member=G.crewMembers.find(m=>m.uid===uid);
+  if(!member){G.pendingCrewEvent=null;closeModal('eventModal');return;}
+  let msg='';
+  switch(action){
+    case'bail':if(G.cash>=500){G.cash-=500;member.loyalty=Math.min(100,member.loyalty+15);member.history.arrests++;msg=`Bailed ${member.name} out. Cost £500.`;}else{msg='Not enough cash for bail. They stayed inside.';member.loyalty=Math.max(0,member.loyalty-10);}break;
+    case'silence':G.heat=Math.min(100,G.heat+5);member.loyalty=Math.min(100,member.loyalty+10);msg=`${member.name} stayed quiet. Heat up slightly.`;break;
+    case'abandon':G.crewMembers=G.crewMembers.filter(m=>m.uid!==uid);G.rep=Math.max(0,G.rep-5);msg=`Cut ${member.name} loose. Reputation took a hit.`;break;
+    case'move_on_tip':if(G.cash>=200){G.cash-=200;const profit=Math.floor(Math.random()*800)+400;G.cash+=profit;G.totalEarned+=profit;msg=`Paid off. Made £${profit}.`;member.history.events++;}else{msg='No cash to move.';}break;
+    case'back_up':member.history.fightsWon++;G.heat=Math.min(100,G.heat+8);G.rep=Math.min(300,G.rep+5);msg=`Backed ${member.name} up. Rep up, heat up.`;break;
+    case'distance':member.loyalty=Math.max(0,member.loyalty-20);msg=`Distanced yourself. ${member.name} isn't happy.`;break;
+    case'fire_member':G.crewMembers=G.crewMembers.filter(m=>m.uid!==uid);msg=`Fired ${member.name}.`;break;
+    case'reward_enforcer':if(G.cash>=300){G.cash-=300;member.loyalty=Math.min(100,member.loyalty+20);member.morale=Math.min(100,member.morale+15);msg=`Rewarded ${member.name}. Loyalty up.`;}else{msg='Not enough cash.';}break;
+    case'acknowledge':member.loyalty=Math.min(100,member.loyalty+5);member.morale=Math.min(100,member.morale+5);msg=`${member.name} appreciated the recognition.`;break;
+    case'use_tip':G.heat=Math.max(0,G.heat-15);msg=`Acted on the tip. Heat dropped.`;member.history.events++;break;
+    case'lay_low':G.heat=Math.max(0,G.heat-5);msg=`Laid low. Good call.`;break;
+    case'clean_cash':if(G.cash>=1000){const bonus=Math.floor(Math.random()*500)+500;G.cash+=bonus;G.totalEarned+=bonus;msg=`${member.name} cleaned the cash. Bonus £${bonus} earned.`;}else{msg='Not enough cash to run it.';}break;
+    case'sort_issue':if(G.cash>=150){G.cash-=150;member.morale=Math.min(100,member.morale+10);msg=`Sorted. Cost £150.`;}else{msg='No cash to sort it.';}break;
+    case'crew_fix':member.morale=Math.max(0,member.morale-10);msg=`${member.name} fixed it but morale dropped.`;break;
+    case'noop':member.morale=Math.min(100,member.morale+5);msg=`Crew's in good shape.`;break;
+    case'ignore':break;
+    default:break;
+  }
+  G.pendingCrewEvent=null;
+  closeModal('eventModal');
+  if(msg&&member){pushCrewMessage(member.name,msg);showToast(msg,'cyan');}
+  renderAll();saveGame();
+}
+
+// ==================== RIVALS ====================
+function spawnRivals(){
+  const thresholds=[{rep:20,idx:0},{rep:50,idx:1},{rep:100,idx:2},{rep:150,idx:3},{rep:220,idx:4}];
+  thresholds.forEach(t=>{
+    if(G.rep>=t.rep){
+      const pool=RIVAL_POOL[t.idx];
+      if(!G.rivals.find(r=>r.id===pool.id)){
+        G.rivals.push({...pool,rep:pool.startRep,lastActionDay:G.gameDay});
+        pushCrewMessage(pool.name,`Word has reached ${pool.area}. ${pool.name} is watching you.`,true);
+        showToast(`New rival: ${pool.name} (${pool.area})`,'red');
+      }
+    }
+  });
+}
+function processRivals(){
+  if(!G.rivals||G.rivals.length===0)return;
+  G.rivals.forEach(r=>{
+    r.rep=Math.min(300,r.rep+2);
+    if(G.gameDay-r.lastActionDay<5)return;
+    const rand=Math.random();
+    if(rand<0.08){pushCrewMessage(r.name,`${r.name} (${r.area}): Don't get comfortable.`,true);r.lastActionDay=G.gameDay;}
+    else if(rand<0.14&&r.rep>G.rep*0.7){pushCrewMessage(r.name,`${r.name} is moving on your turf. Check the WAR ROOM.`,true);r.lastActionDay=G.gameDay;}
+    else if(rand<0.18&&r.rep<G.rep*0.5){const amount=Math.floor(r.rep*100);pushCrewMessage(r.name,`${r.name} wants a truce. They're offering £${fmt(amount)}.`,false);r.lastActionDay=G.gameDay;}
+  });
+}
+
+// ==================== PROFILE EXTRAS ====================
+function renderProfile(){
+  const xn=G.level*500;
+  document.getElementById('profileName').textContent=G.alias;
+  document.getElementById('notorietyTitle').textContent=getNotoriety();
+  document.getElementById('lifestyleTier').textContent=getLifestyle();
+  document.getElementById('profileLevel').textContent=G.level;
+  document.getElementById('profileXP').textContent=`${G.xp} / ${xn}`;
+  document.getElementById('xpBar').style.width=Math.min(100,(G.xp/xn)*100)+'%';
+  document.getElementById('profileCash').textContent='£'+fmt(G.cash);
+  document.getElementById('profileEarned').textContent='£'+fmt(G.totalEarned);
+  document.getElementById('profileSpent').textContent='£'+fmt(G.totalSpent);
+  document.getElementById('profileNetWorth').textContent='£'+fmt(getNetWorth());
+  document.getElementById('profileHeat').textContent=Math.round(G.heat)+'%';
+  const hf=document.getElementById('heatFill');hf.style.width=G.heat+'%';hf.style.background=G.heat>70?'var(--neon-red)':G.heat>40?'var(--neon-orange)':'var(--neon-green)';
+  document.getElementById('statFightsWon').textContent=G.stats.fightsWon;
+  document.getElementById('statFightsLost').textContent=G.stats.fightsLost;
+  document.getElementById('statMugged').textContent=G.stats.mugged;
+  document.getElementById('statDeals').textContent=G.stats.deals;
+  document.getElementById('statEvents').textContent=G.stats.events;
+  document.getElementById('statDays').textContent=G.stats.days;
+  document.getElementById('statBestTrade').textContent='£'+fmt(G.stats.bestTrade);
+  document.getElementById('statGambleWon').textContent=G.stats.gamblesWon;
+  document.getElementById('prestigeLevel').textContent=G.prestige;
+  document.getElementById('prestigeBonus').textContent='+'+G.prestige*10+'%';
+  document.getElementById('btnPrestige').disabled=G.level<20;
+  // gang name/colour inputs
+  const gni=document.getElementById('gangNameInput');if(gni)gni.value=G.gangName||'THE FIRM';
+  const gci=document.getElementById('gangColourInput');if(gci)gci.value=G.gangColour||'#ff0066';
+  applyGangColour(G.gangColour||'#ff0066');
+  // street bio
+  G.streetBio=generateStreetBio();
+  const sbd=document.getElementById('streetBioDisplay');if(sbd)sbd.textContent=G.streetBio;
+  // boss outfit
+  const nw=getNetWorth();
+  let outfitDesc;
+  if(nw<5000)outfitDesc='TRACKSUIT & TRAINERS';
+  else if(nw<25000)outfitDesc='HOODIE & JOGGERS';
+  else if(nw<100000)outfitDesc='GOLD CHAIN & BOMBER';
+  else if(nw<500000)outfitDesc='DESIGNER SUIT';
+  else outfitDesc='BOSS-LEVEL DRIP';
+  // update char lifestyle to show outfit
+  const cl=document.getElementById('charDisplay');
+  if(cl){
+    // outfit desc injected via renderCharacter — handled there
+  }
+}
+
+// ==================== INIT ====================
+function init(){
+  DRUGS.forEach(d=>{if(!G.marketPrices[d.id])G.marketPrices[d.id]=d.basePrice;if(!G.priceHistory[d.id])G.priceHistory[d.id]=[d.basePrice]});
+  if(!G.aliasSet){G.alias=['SHADOW','GHOST','RAZOR','BLAZE','STORM','VIPER','ROGUE','PHANTOM','APEX','CHAOS'][Math.floor(Math.random()*10)];G.aliasSet=true;}
+  applyGangColour(G.gangColour||'#ff0066');
+  generateMissions();
+  renderAll();
+  startTimers();
+  if(G.stats.deals===0)setTimeout(()=>showToast('Welcome to MANORS. Build your empire.','cyan'),500);
+}
 
 init();
 </script>
