@@ -591,6 +591,10 @@
   }
   .scanner-bar.show { display:block; animation: scanBar 1.5s linear infinite; }
   @keyframes scanBar { from{background-position:-100% 0} to{background-position:200% 0} }
+
+  /* Crew activity */
+  .crew-task { font-size:10px; color:var(--neon-cyan); font-family:var(--mono); margin-top:6px; }
+  .crew-card-contrib { font-size:10px; color:var(--neon-green); font-family:var(--mono); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -620,21 +624,11 @@
 <div class="nav" id="navBar">
   <div class="nav-tab active" onclick="switchTab('market')">MARKET</div>
   <div class="nav-tab" onclick="switchTab('inventory')">STASH</div>
-  <div class="nav-tab" onclick="switchTab('character')">CHARACTER</div>
-  <div class="nav-tab" onclick="switchTab('businesses')">EMPIRE</div>
-  <div class="nav-tab" onclick="switchTab('turf')">TURF</div>
+  <div class="nav-tab" onclick="switchTab('empire')">EMPIRE</div>
+  <div class="nav-tab" onclick="switchTab('crew')">CREW<span id="phoneNotifDot" style="display:none;width:6px;height:6px;background:var(--neon-red);border-radius:50%;margin-left:4px;vertical-align:middle"></span></div>
   <div class="nav-tab" onclick="switchTab('assets')">ASSETS</div>
-  <div class="nav-tab" onclick="switchTab('staff')">CREW</div>
-  <div class="nav-tab" onclick="switchTab('garage')">GARAGE</div>
-  <div class="nav-tab" onclick="switchTab('props')">PROPS</div>
-  <div class="nav-tab" onclick="switchTab('warroom')">WAR ROOM</div>
-  <div class="nav-tab" onclick="switchTab('phone')">📱 PHONE<span id="phoneNotifDot" style="display:none;width:6px;height:6px;background:var(--neon-red);border-radius:50%;margin-left:4px;vertical-align:middle"></span></div>
-  <div class="nav-tab" onclick="switchTab('memories')">MEMORIES</div>
   <div class="nav-tab" onclick="switchTab('hustle')">HUSTLE</div>
-  <div class="nav-tab" onclick="switchTab('skills')">SKILLS</div>
-  <div class="nav-tab" onclick="switchTab('missions')">MISSIONS</div>
-  <div class="nav-tab" onclick="switchTab('achievements')">TROPHIES</div>
-  <div class="nav-tab" onclick="switchTab('profile')">PROFILE</div>
+  <div class="nav-tab" onclick="switchTab('boss')">BOSS</div>
 </div>
 
 <div class="main">
@@ -650,7 +644,7 @@
     <div class="drug-grid" id="drugGrid"></div>
   </div>
 
-  <!-- INVENTORY -->
+  <!-- STASH -->
   <div id="page-inventory" class="page">
     <div class="section-header"><div class="section-title">YOUR STASH</div></div>
     <div class="card cyan">
@@ -664,83 +658,54 @@
     <div id="inventoryList"><div class="empty-state">// STASH EMPTY</div></div>
   </div>
 
-  <!-- CHARACTER -->
-  <div id="page-character" class="page">
-    <div class="section-header"><div class="section-title">YOUR CHARACTER</div></div>
-    <div class="char-display" id="charDisplay"></div>
-    <div class="section-title mb8">// COMBAT STATS</div>
-    <div class="card red">
-      <div class="card-row"><div class="card-key">FIGHT POWER</div><div class="card-val text-red neon-glow" id="charPower">5</div></div>
-      <div class="card-row"><div class="card-key">ESCAPE CHANCE</div><div class="card-val text-cyan" id="charEscape">65%</div></div>
-      <div class="card-row"><div class="card-key">HEAT MODIFIER</div><div class="card-val text-orange" id="charHeatMod">x1.0</div></div>
-      <div class="card-row"><div class="card-key">BUY DISCOUNT</div><div class="card-val text-green" id="charBuyDisc">0%</div></div>
-      <div class="card-row"><div class="card-key">SELL BONUS</div><div class="card-val text-green" id="charSellBonus">0%</div></div>
-    </div>
-    <div class="section-title mb8 mt8">// GARAGE</div>
-    <div class="garage-grid" id="garageGrid"></div>
-  </div>
-
-  <!-- BUSINESSES -->
-  <div id="page-businesses" class="page">
-    <div class="section-header"><div class="section-title">LEGIT FRONTS</div></div>
+  <!-- EMPIRE — war room + businesses + turf + props -->
+  <div id="page-empire" class="page">
+    <div id="page-warroom-inner"></div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// LEGIT FRONTS</div></div>
     <div class="card green">
       <div class="card-row"><div class="card-key">DAILY INCOME</div><div class="card-val up" id="bizIncomeDisplay">£0</div></div>
       <div class="card-row"><div class="card-key">BUSINESSES OWNED</div><div class="card-val" id="bizOwnedDisplay">0</div></div>
     </div>
     <div id="businessList"></div>
-  </div>
-
-  <!-- TURF -->
-  <div id="page-turf" class="page">
-    <div class="section-header"><div class="section-title">TERRITORY</div></div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// TERRITORY</div></div>
     <div class="card">
       <div class="card-row"><div class="card-key">TURFS OWNED</div><div class="card-val" id="turfsOwned">0</div></div>
       <div class="card-row"><div class="card-key">TURF INCOME</div><div class="card-val up" id="turfIncome">£0/d</div></div>
     </div>
     <div class="turf-grid" id="turfGrid"></div>
+    <hr class="divider">
+    <div id="propsInner"></div>
   </div>
 
-  <!-- ASSETS -->
-  <div id="page-assets" class="page">
-    <div class="section-header"><div class="section-title">WEAPONS & ASSETS</div></div>
-    <div class="section-title mb8">// WEAPONS</div><div id="weaponsList"></div>
-    <hr class="divider">
-    <div class="section-title mb8">// VEHICLES</div><div id="vehiclesList"></div>
-    <hr class="divider">
-    <div class="section-title mb8">// PROPERTIES</div><div id="propertiesList"></div>
-    <hr class="divider">
-    <div class="section-title mb8">// LUXURY</div><div id="luxuryList"></div>
-  </div>
-
-  <!-- STAFF -->
-  <div id="page-staff" class="page">
+  <!-- CREW — activity feed + cards + hire + messages -->
+  <div id="page-crew" class="page">
+    <div id="crewActivityFeed" style="margin-bottom:12px"></div>
     <div id="crewSummary" style="margin-bottom:10px;font-family:var(--mono);font-size:11px;color:var(--muted)"></div>
     <div id="crewCardsContainer"></div>
-    <div class="section-title mb8 mt8">// HIRE CREW</div>
+    <div class="section-header" style="margin-top:16px"><div class="section-title">// HIRE CREW</div></div>
     <div id="staffList"></div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// MESSAGES</div></div>
+    <div id="crewMessagesInner"></div>
   </div>
 
-  <!-- GARAGE -->
-  <div id="page-garage" class="page">
-    <div class="section-header"><div class="section-title">GARAGE</div></div>
+  <!-- ASSETS — garage + weapons + luxury -->
+  <div id="page-assets" class="page">
+    <div class="section-header"><div class="section-title">// GARAGE</div></div>
     <div id="garagePageContent"></div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// WEAPONS</div></div>
+    <div id="weaponsList"></div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// LUXURY</div></div>
+    <div id="luxuryList"></div>
   </div>
 
-  <!-- PROPS -->
-  <div id="page-props" class="page"></div>
-
-  <!-- WAR ROOM -->
-  <div id="page-warroom" class="page"></div>
-
-  <!-- PHONE -->
-  <div id="page-phone" class="page"></div>
-
-  <!-- MEMORIES -->
-  <div id="page-memories" class="page"></div>
-
-  <!-- HUSTLE (mini games) -->
+  <!-- HUSTLE — mini games + skills + missions + achievements -->
   <div id="page-hustle" class="page">
-    <div class="section-header"><div class="section-title">SIDE HUSTLES</div></div>
+    <div class="section-header"><div class="section-title">// SIDE HUSTLES</div></div>
 
     <div class="minigame-area">
       <div class="minigame-title text-cyan">COIN FLIP</div>
@@ -800,12 +765,10 @@
       <button class="btn btn-buy btn-full mt8" onclick="scoutMarket()">SCOUT (£200)</button>
       <div id="scoutResult" style="margin-top:12px;font-family:var(--mono);font-size:11px;min-height:20px;color:var(--neon-green)"></div>
     </div>
-  </div>
 
-  <!-- SKILLS -->
-  <div id="page-skills" class="page">
+    <hr class="divider">
     <div class="section-header">
-      <div class="section-title">SKILL TREE</div>
+      <div class="section-title">// SKILL TREE</div>
       <div class="card-badge badge-pink" id="skillPointsDisplay">0 SP</div>
     </div>
     <div class="card">
@@ -813,41 +776,34 @@
       <div class="card-desc">Earn 1 skill point per level. Spend them for permanent bonuses.</div>
     </div>
     <div id="skillTree"></div>
-  </div>
-
-  <!-- MISSIONS -->
-  <div id="page-missions" class="page">
-    <div class="section-header">
-      <div class="section-title">DAILY MISSIONS</div>
-      <div class="timer-display" id="missionTimer">Resets: --:--</div>
-    </div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// MISSIONS</div></div>
+    <div id="missionTimer" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px"></div>
     <div id="missionList"></div>
     <hr class="divider">
-    <div class="section-header"><div class="section-title">MILESTONES</div></div>
+    <div class="section-header"><div class="section-title">// MILESTONES</div></div>
     <div id="milestoneList"></div>
-  </div>
-
-  <!-- ACHIEVEMENTS -->
-  <div id="page-achievements" class="page">
-    <div class="section-header">
-      <div class="section-title">TROPHIES</div>
-      <div class="card-badge badge-purple" id="achCount">0/0</div>
-    </div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// TROPHIES</div></div>
+    <div class="card-badge badge-purple" id="achCount" style="margin-bottom:8px;display:inline-block">0/0</div>
     <div class="ach-grid" id="achGrid"></div>
   </div>
 
-  <!-- PROFILE -->
-  <div id="page-profile" class="page">
-    <div class="section-header"><div class="section-title">YOUR RECORD</div></div>
-    <div id="wantedPoster" style="margin-bottom:10px"></div>
-    <div class="card purple">
-      <div class="card-row"><div class="card-key">NOTORIETY</div><div class="card-val text-purple neon-glow" id="notorietyTitle">Nobody</div></div>
-      <div class="card-row"><div class="card-key">LIFESTYLE</div><div class="card-val text-cyan" id="lifestyleTier">Street Level</div></div>
-      <div class="card-row"><div class="card-key">ALIAS</div><div class="card-val text-pink" id="profileName">--</div></div>
-      <div class="card-row"><div class="card-key">LEVEL</div><div class="card-val" id="profileLevel">1</div></div>
-      <div class="card-row"><div class="card-key">XP</div><div class="card-val" id="profileXP">0 / 500</div></div>
-      <div class="progress-bar mt8"><div class="progress-fill" id="xpBar" style="width:0%"></div></div>
+  <!-- BOSS — character + profile + memories -->
+  <div id="page-boss" class="page">
+    <div class="section-header"><div class="section-title">// YOUR CHARACTER</div></div>
+    <div class="char-display" id="charDisplay"></div>
+    <div class="section-title mb8">// COMBAT STATS</div>
+    <div class="card red">
+      <div class="card-row"><div class="card-key">FIGHT POWER</div><div class="card-val text-red neon-glow" id="charPower">5</div></div>
+      <div class="card-row"><div class="card-key">ESCAPE CHANCE</div><div class="card-val text-cyan" id="charEscape">65%</div></div>
+      <div class="card-row"><div class="card-key">HEAT MODIFIER</div><div class="card-val text-orange" id="charHeatMod">x1.0</div></div>
+      <div class="card-row"><div class="card-key">BUY DISCOUNT</div><div class="card-val text-green" id="charBuyDisc">0%</div></div>
+      <div class="card-row"><div class="card-key">SELL BONUS</div><div class="card-val text-green" id="charSellBonus">0%</div></div>
     </div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// IDENTITY</div></div>
+    <div id="wantedPoster" style="margin-bottom:10px"></div>
     <div class="card" style="margin-bottom:10px">
       <div class="card-header"><div class="card-title">YOUR CREW</div></div>
       <div class="card-row">
@@ -863,43 +819,22 @@
                oninput="applyGangColour(this.value)">
       </div>
     </div>
+    <div class="card" id="aliasCard" style="margin-bottom:10px">
+      <div class="card-header"><div class="card-title">ALIAS</div></div>
+      <div id="aliasSection"></div>
+    </div>
     <div class="card" style="margin-bottom:10px">
-      <div class="card-header"><div class="card-title">STREET BIO</div></div>
+      <div class="card-header"><div class="card-title">STREET REP</div></div>
       <div id="streetBioDisplay" style="font-size:12px;color:var(--muted);line-height:1.6;font-family:var(--mono)"></div>
     </div>
-    <div class="card green">
-      <div class="card-header"><div class="card-title">FINANCES</div></div>
-      <div class="card-row"><div class="card-key">CASH</div><div class="card-val up" id="profileCash">£0</div></div>
-      <div class="card-row"><div class="card-key">TOTAL EARNED</div><div class="card-val" id="profileEarned">£0</div></div>
-      <div class="card-row"><div class="card-key">TOTAL SPENT</div><div class="card-val down" id="profileSpent">£0</div></div>
-      <div class="card-row"><div class="card-key">NET WORTH</div><div class="card-val text-pink neon-glow" id="profileNetWorth">£0</div></div>
-    </div>
-    <div class="card red">
-      <div class="card-header"><div class="card-title">HEAT</div></div>
-      <div class="card-row"><div class="card-key">CURRENT</div><div class="card-val text-red" id="profileHeat">0%</div></div>
-      <div class="heat-bar"><div class="heat-fill" id="heatFill" style="width:0%;background:var(--neon-green)"></div></div>
-      <button class="btn btn-secondary mt8" style="width:100%" onclick="layLow()">LAY LOW (-10 HEAT)</button>
-    </div>
-    <div class="card cyan">
-      <div class="card-header"><div class="card-title">LIFETIME STATS</div></div>
-      <div class="card-row"><div class="card-key">FIGHTS WON</div><div class="card-val" id="statFightsWon">0</div></div>
-      <div class="card-row"><div class="card-key">FIGHTS LOST</div><div class="card-val down" id="statFightsLost">0</div></div>
-      <div class="card-row"><div class="card-key">MUGGED</div><div class="card-val down" id="statMugged">0</div></div>
-      <div class="card-row"><div class="card-key">DEALS</div><div class="card-val up" id="statDeals">0</div></div>
-      <div class="card-row"><div class="card-key">EVENTS</div><div class="card-val" id="statEvents">0</div></div>
-      <div class="card-row"><div class="card-key">DAYS</div><div class="card-val" id="statDays">0</div></div>
-      <div class="card-row"><div class="card-key">BEST TRADE</div><div class="card-val up" id="statBestTrade">£0</div></div>
-      <div class="card-row"><div class="card-key">GAMBLES WON</div><div class="card-val text-yellow" id="statGambleWon">0</div></div>
-    </div>
-    <div class="card purple">
-      <div class="card-header"><div class="card-title">PRESTIGE</div></div>
-      <div class="card-desc">Reset for permanent +10% income. Requires Level 20+.</div>
-      <div class="card-row"><div class="card-key">PRESTIGE LVL</div><div class="card-val text-purple" id="prestigeLevel">0</div></div>
-      <div class="card-row"><div class="card-key">INCOME BONUS</div><div class="card-val text-purple" id="prestigeBonus">+0%</div></div>
-      <button class="btn btn-purple mt8" style="width:100%" id="btnPrestige" onclick="doPrestige()">PRESTIGE</button>
-    </div>
-    <button class="btn btn-danger" style="width:100%;margin-top:8px" onclick="resetGame()">WIPE SAVE</button>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// PHOTO WALL</div></div>
+    <div id="memoriesInner"></div>
+    <hr class="divider">
+    <div class="section-header"><div class="section-title">// DANGER ZONE</div></div>
+    <div id="profileActions"></div>
   </div>
+
 </div>
 
 <!-- BOTTOM BAR -->
@@ -1037,7 +972,7 @@ const DS = {
 const STREET_PREFIXES=['Leaky','Proper','Mad','Tiny','Big','Likkle','Sket','Dutty','Nifty','Clever','Sneaky','Dodgy'];
 const STREET_SUFFIXES=['Nez','Bizz','Zed','T','Drizz','Spence','Mack','Tef','Blaze','Zero','Brix','Cash'];
 function genStreetName(){return STREET_PREFIXES[Math.floor(Math.random()*STREET_PREFIXES.length)]+' '+STREET_SUFFIXES[Math.floor(Math.random()*STREET_SUFFIXES.length)]}
-function makeFreshCrewMember(staffId){return{uid:'crew_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),id:staffId,name:genStreetName(),hireDay:(typeof G!=='undefined'?G.gameDay:0)||0,loyalty:70+Math.floor(Math.random()*20),morale:70+Math.floor(Math.random()*20),history:{fightsWon:0,dealsRun:0,events:0,arrests:0}}}
+function makeFreshCrewMember(staffId){return{uid:'crew_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),id:staffId,name:genStreetName(),hireDay:(typeof G!=='undefined'?G.gameDay:0)||0,loyalty:70+Math.floor(Math.random()*20),morale:70+Math.floor(Math.random()*20),history:{fightsWon:0,dealsRun:0,events:0,arrests:0},currentTask:'',earnedToday:0,taskUpdated:-1}}
 
 let G=JSON.parse(localStorage.getItem('manors_v3')||'null')||JSON.parse(JSON.stringify(DS));
 // migrations
@@ -1060,6 +995,8 @@ if(!G.memories)G.memories=[];
 if(!G.streetBio)G.streetBio='';
 if(G.bioMilestone===undefined)G.bioMilestone=0;
 if(!G.pendingCrewEvent)G.pendingCrewEvent=null;
+// migrate crew members to include new task fields
+G.crewMembers.forEach(m=>{if(m.currentTask===undefined)m.currentTask='';if(m.earnedToday===undefined)m.earnedToday=0;if(m.taskUpdated===undefined)m.taskUpdated=-1;});
 
 let currentDrug=null,tradeQty=1,currentPurchase=null,marketTimerVal=30,dayTimer=0,activeTab='market';
 let lastEventTime=0,streetCooldown=0;
@@ -1282,6 +1219,65 @@ const CREW_EVENTS={
   ]
 };
 
+const CREW_TASKS={
+  runner:[
+    'Making a drop in Peckham',
+    'Running product to Brixton',
+    'Shifting units on the high street',
+    'Delivering to a regular in Lewisham',
+    'Moving stock from the stash',
+  ],
+  lookout:[
+    'Eyes on the corner of Old Kent Road',
+    'Watching for feds near the stash',
+    'Clocking movement near your turf',
+    'Monitoring police frequencies',
+    'Posted up at the estate entrance',
+  ],
+  enforcer:[
+    'Patrolling your Peckham turf',
+    'Standing guard at the warehouse',
+    'Collecting from a debtor in Hackney',
+    'Running security on a drop',
+    'Keeping order on the strip',
+  ],
+  accountant:[
+    'Balancing the books',
+    'Running the numbers on this week\'s take',
+    'Filing the business accounts',
+    'Counting proceeds from the corner',
+    'Moving money through the car wash',
+  ],
+  warehouse_man:[
+    'Taking stock at the warehouse',
+    'Loading up the van',
+    'Organising the stash',
+    'Receiving a delivery',
+    'Moving product between safe houses',
+  ],
+  chemist:[
+    'Cooking up a batch',
+    'Quality-checking the product',
+    'Working in the lab',
+    'Prepping the next order',
+    'Cutting and bagging',
+  ],
+  lawyer:[
+    'In a client meeting',
+    'Reviewing your case files',
+    'On call — monitoring the scanner',
+    'At the Old Bailey',
+    'Liaising with the brief',
+  ],
+  driver:[
+    'On standby with the engine running',
+    'Casing the exit routes',
+    'Ready to move on your word',
+    'Cleaning the motor',
+    'Waiting outside Brixton market',
+  ],
+};
+
 const RIVAL_POOL=[
   {id:'manny_black',name:'Manny Black',area:'Tottenham',icon:'😠',startRep:30,threatLevel:'LOW'},
   {id:'ice_queen',name:'Ice Queen',area:'Camden',icon:'❄️',startRep:25,threatLevel:'LOW'},
@@ -1453,6 +1449,8 @@ function processDailyIncome(){
   if(i>0){G.cash+=i;G.totalEarned+=i;showToast(`Daily income: +£${fmt(i)}`,'green');if(i>=500)showCashAnim(i);}
   // morale decay
   G.crewMembers.forEach(m=>{m.morale=Math.max(0,m.morale-1)});
+  // update crew tasks for the new day
+  updateCrewTasks();
   // check crew events every 3 days
   checkCrewEvents();
   // spawn/process rivals
@@ -1492,6 +1490,21 @@ function processWages(){
 }
 function processTurfIncome(){let i=getTurfIncome();if(i>0){G.cash+=i;G.totalEarned+=i}}
 
+function updateCrewTasks(){
+  G.crewMembers.forEach(m=>{
+    if(m.taskUpdated!==G.gameDay){
+      const pool=CREW_TASKS[m.id]||['Handling business'];
+      m.currentTask=pool[Math.floor(Math.random()*pool.length)];
+      m.taskUpdated=G.gameDay;
+      const loyMod=m.loyalty/100;
+      if(m.id==='runner')m.earnedToday=Math.floor((40+Math.random()*60)*loyMod);
+      else if(m.id==='accountant')m.earnedToday=Math.floor(getDailyIncome()*0.10*loyMod);
+      else if(m.id==='chemist')m.earnedToday=Math.floor((80+Math.random()*120)*loyMod);
+      else m.earnedToday=0;
+    }
+  });
+}
+
 // ==================== PRICES (MEAN REVERSION) ====================
 function updatePrices(){
   const nightMod=G.isNight?1.1:1;
@@ -1510,7 +1523,8 @@ function updatePrices(){
 }
 
 // ==================== RENDER ====================
-function renderAll(){renderStats();renderMarket();renderInventory();renderCharacter();renderBusinesses();renderTurf();renderAssets();renderStaff();renderGarage();renderProps();renderWarRoom();renderPhone();renderMemories();renderSkills();renderMissions();renderAchievements();renderProfile();renderHustle();renderWantedPoster();}
+function renderAll(){renderStats();renderMarket();renderInventory();renderCharacter();renderBusinesses();renderTurf();renderAssets();renderStaff();renderGarage();renderProps();renderWarRoom();renderPhone();renderMemories();renderSkills();renderMissions();renderAchievements();renderBossPage();renderHustle();renderWantedPoster();}
+function setAlias(){const inp=document.getElementById('aliasInput');if(!inp)return;const v=inp.value.trim().toUpperCase();if(!v){showToast('Enter an alias','red');return;}G.alias=v;G.aliasSet=true;G.streetBio=generateStreetBio();saveGame();renderBossPage();showToast('Alias set: '+v,'cyan');}
 
 function renderStats(){
   document.getElementById('cashDisplay').textContent='£'+fmt(G.cash);
@@ -1613,8 +1627,9 @@ function renderCharacter(){
   document.getElementById('charBuyDisc').textContent=Math.round(getBuyDiscount()*100)+'%';
   document.getElementById('charSellBonus').textContent=Math.round(getSellBonus()*100)+'%';
 
-  // Garage
-  document.getElementById('garageGrid').innerHTML=G.ownedVehicles.length?G.ownedVehicles.map(id=>{
+  // Garage (mini grid — only shown if element exists)
+  const gg=document.getElementById('garageGrid');
+  if(gg)gg.innerHTML=G.ownedVehicles.length?G.ownedVehicles.map(id=>{
     const v=VEHICLES.find(x=>x.id===id);const active=G.activeVehicle===id;
     return`<div class="garage-card ${active?'active-ride':''}" onclick="setActiveVehicle('${id}')"><div class="icon">${v.icon}</div><div class="name">${v.name}</div>${active?'<div style="font-size:9px;color:var(--neon-cyan);font-family:var(--heading);letter-spacing:1px;margin-top:4px">ACTIVE</div>':''}</div>`;
   }).join(''):'<div class="empty-state" style="grid-column:1/-1">// NO VEHICLES</div>';
@@ -1640,10 +1655,10 @@ function renderTurf(){
 }
 
 function renderAssets(){
-  document.getElementById('weaponsList').innerHTML=WEAPONS.map(w=>{const o=G.ownedWeapons.includes(w.id);return`<div class="card ${o?'red':''}"><div class="card-header"><div class="card-title">${w.icon} ${w.name}</div><div class="card-badge ${o?'badge-red':'badge-grey'}">${o?'EQUIPPED':'£'+fmt(w.cost)}</div></div><div class="card-row"><div class="card-key">POWER</div><div class="card-val text-red">+${w.power}</div></div>${w.heatAdd?`<div class="card-row"><div class="card-key">HEAT</div><div class="card-val text-red">+${w.heatAdd}%</div></div>`:''} ${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('weapon','${w.id}')" ${G.cash>=w.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
-  document.getElementById('vehiclesList').innerHTML=VEHICLES.map(v=>{const o=G.ownedVehicles.includes(v.id);return`<div class="card ${o?'cyan':''}"><div class="card-header"><div class="card-title">${v.icon} ${v.name}</div><div class="card-badge ${o?'badge-cyan':'badge-grey'}">${o?'OWNED':'£'+fmt(v.cost)}</div></div><div class="card-desc">${v.desc}</div>${v.carryBonus?`<div class="card-row"><div class="card-key">CARRY</div><div class="card-val up">+${v.carryBonus}</div></div>`:''}${v.repBonus?`<div class="card-row"><div class="card-key">REP</div><div class="card-val">+${v.repBonus}</div></div>`:''}${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('vehicle','${v.id}')" ${G.cash>=v.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
-  document.getElementById('propertiesList').innerHTML=PROPERTIES.map(p=>{const o=G.ownedProperties.includes(p.id);return`<div class="card ${o?'orange':''}"><div class="card-header"><div class="card-title">${p.icon} ${p.name}</div><div class="card-badge ${o?'badge-orange':'badge-grey'}">${o?'OWNED':'£'+fmt(p.cost)}</div></div><div class="card-desc">${p.desc}</div><div class="card-row"><div class="card-key">INCOME</div><div class="card-val up">£${p.dailyIncome}/d</div></div><div class="card-row"><div class="card-key">CARRY</div><div class="card-val">+${p.carryBonus}</div></div>${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('property','${p.id}')" ${G.cash>=p.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
-  document.getElementById('luxuryList').innerHTML=LUXURY.map(l=>{const o=G.ownedLuxury.includes(l.id);return`<div class="card ${o?'purple':''}"><div class="card-header"><div class="card-title">${l.icon} ${l.name}</div><div class="card-badge ${o?'badge-purple':'badge-grey'}">${o?'OWNED':'£'+fmt(l.cost)}</div></div><div class="card-desc">${l.desc}</div><div class="card-row"><div class="card-key">REP</div><div class="card-val">+${l.repBonus}</div></div>${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('luxury','${l.id}')" ${G.cash>=l.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
+  const wl=document.getElementById('weaponsList');
+  if(wl)wl.innerHTML=WEAPONS.map(w=>{const o=G.ownedWeapons.includes(w.id);return`<div class="card ${o?'red':''}"><div class="card-header"><div class="card-title">${w.icon} ${w.name}</div><div class="card-badge ${o?'badge-red':'badge-grey'}">${o?'EQUIPPED':'£'+fmt(w.cost)}</div></div><div class="card-row"><div class="card-key">POWER</div><div class="card-val text-red">+${w.power}</div></div>${w.heatAdd?`<div class="card-row"><div class="card-key">HEAT</div><div class="card-val text-red">+${w.heatAdd}%</div></div>`:''} ${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('weapon','${w.id}')" ${G.cash>=w.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
+  const ll=document.getElementById('luxuryList');
+  if(ll)ll.innerHTML=LUXURY.map(l=>{const o=G.ownedLuxury.includes(l.id);return`<div class="card ${o?'purple':''}"><div class="card-header"><div class="card-title">${l.icon} ${l.name}</div><div class="card-badge ${o?'badge-purple':'badge-grey'}">${o?'OWNED':'£'+fmt(l.cost)}</div></div><div class="card-desc">${l.desc}</div><div class="card-row"><div class="card-key">REP</div><div class="card-val">+${l.repBonus}</div></div>${!o?`<button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('luxury','${l.id}')" ${G.cash>=l.cost?'':'disabled'}>BUY</button>`:''}</div>`}).join('');
 }
 
 function renderSkills(){
@@ -1971,17 +1986,23 @@ function switchTab(tab){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   const pg=document.getElementById('page-'+tab);
   if(pg)pg.classList.add('active');
-  const tabs=['market','inventory','character','businesses','turf','assets','staff','garage','props','warroom','phone','memories','hustle','skills','missions','achievements','profile'];
+  const tabs=['market','inventory','empire','crew','assets','hustle','boss'];
   const idx=tabs.indexOf(tab);
   if(idx>=0)document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
-  if(tab==='phone')renderPhone();
-  if(tab==='garage')renderGarage();
-  if(tab==='props')renderProps();
-  if(tab==='warroom')renderWarRoom();
-  if(tab==='memories')renderMemories();
+  if(tab==='crew'){renderPhone();renderMemories();}
+  if(tab==='assets')renderGarage();
+  if(tab==='empire'){renderWarRoom();renderProps();}
+  if(tab==='boss')renderBossPage();
+  if(tab==='hustle')renderMissions();
 }
-function switchSection(s){document.querySelectorAll('.bottom-btn').forEach(b=>b.classList.remove('active'));document.getElementById('bb-'+s)?.classList.add('active');
-  if(s==='market')switchTab('market');else if(s==='character')switchTab('character');else if(s==='hustle')switchTab('hustle');else if(s==='profile')switchTab('profile')}
+function switchSection(s){
+  document.querySelectorAll('.bottom-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bb-'+s)?.classList.add('active');
+  if(s==='market')switchTab('market');
+  else if(s==='character')switchTab('boss');
+  else if(s==='hustle')switchTab('hustle');
+  else if(s==='profile')switchTab('boss');
+}
 
 function closeModal(id){document.getElementById(id).classList.remove('show')}
 document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',function(e){if(e.target===this)closeModal(this.id)})});
@@ -1996,6 +2017,21 @@ function renderStaff(){
   const wages=G.crewMembers.reduce((s,m)=>{const d=STAFF.find(x=>x.id===m.id);return s+(d?d.wage:0)},0);
   const summary=document.getElementById('crewSummary');
   if(summary)summary.textContent=`CREW: ${G.crewMembers.length} members — Weekly wages: £${fmt(wages)}`;
+
+  // Crew activity feed
+  const feed=document.getElementById('crewActivityFeed');
+  if(feed&&G.crewMembers.length>0){
+    const activeCount=G.crewMembers.filter(m=>m.loyalty>50).length;
+    const totalEarned=G.crewMembers.reduce((s,m)=>s+(m.earnedToday||0),0);
+    feed.innerHTML=`<div class="card cyan" style="margin-bottom:8px">
+      <div class="card-row"><span class="card-key">ACTIVE CREW</span><span class="card-val up">${activeCount}/${G.crewMembers.length} ON TASK</span></div>
+      ${totalEarned>0?`<div class="card-row"><span class="card-key">CREW EARNINGS TODAY</span><span class="card-val up">£${fmt(totalEarned)}</span></div>`:''}
+      <div class="card-row"><span class="card-key">AVG LOYALTY</span><span class="card-val">${G.crewMembers.length>0?Math.round(G.crewMembers.reduce((s,m)=>s+m.loyalty,0)/G.crewMembers.length):0}%</span></div>
+    </div>`;
+  } else if(feed){
+    feed.innerHTML='';
+  }
+
   const container=document.getElementById('crewCardsContainer');
   if(container){
     if(G.crewMembers.length===0){container.innerHTML='<div class="empty-state">NO CREW YET — HIRE BELOW</div>';}
@@ -2004,6 +2040,8 @@ function renderStaff(){
         const st=STAFF.find(x=>x.id===m.id)||{name:m.id,icon:'👤'};
         const loyCol=m.loyalty>70?'var(--neon-green)':m.loyalty>40?'var(--neon-yellow)':'var(--neon-red)';
         const arrestBadge=m.history.arrests>0?`<span class="card-badge badge-red" style="font-size:8px;margin-top:4px;display:inline-block">ARRESTED x${m.history.arrests}</span>`:'';
+        const taskLine=`<div class="crew-task">📍 ${m.currentTask||'Waiting for orders'}</div>`;
+        const contribLine=(m.earnedToday||0)>0?`<div class="crew-card-contrib">💰 Contributed £${fmt(m.earnedToday)} today</div>`:'';
         return`<div class="crew-card" style="border-left-color:var(--gang-colour,#ff0066)">
           <div class="crew-card-top">
             <div class="crew-card-portrait">${st.icon}</div>
@@ -2016,7 +2054,7 @@ function renderStaff(){
           <div class="crew-loyalty-label">LOYALTY <span>${m.loyalty}%</span></div>
           <div class="progress-bar"><div class="progress-fill" style="width:${m.loyalty}%;background:${loyCol}"></div></div>
           <div class="crew-card-stats">Hired day ${m.hireDay} · ${m.history.dealsRun} deals · ${m.history.fightsWon} wins · Morale ${m.morale}%</div>
-          ${arrestBadge}
+          ${taskLine}${contribLine}${arrestBadge}
         </div>`;
       }).join('');
     }
@@ -2029,6 +2067,8 @@ function renderStaff(){
       return`<div class="card"><div style="display:flex;gap:12px;align-items:flex-start"><div class="staff-avatar">${s.icon}</div><div style="flex:1"><div class="card-header"><div class="card-title">${s.name}</div><div class="card-badge badge-grey">x${c}</div></div><div class="card-desc">${s.desc}</div><div class="card-row"><div class="card-key">HIRE</div><div class="card-val ${G.cash>=s.cost?'up':'down'}">£${fmt(s.cost)}</div></div><div class="card-row"><div class="card-key">WAGE</div><div class="card-val down">£${fmt(s.wage)}/wk</div></div><button class="btn btn-secondary mt8" style="width:100%" onclick="openPurchase('staff','${s.id}')" ${G.cash>=s.cost?'':'disabled'}>HIRE</button></div></div></div>`;
     }).join('');
   }
+  // also render messages section
+  renderPhone();
 }
 
 function fireCrewMember(uid){
@@ -2169,7 +2209,7 @@ function buyPropUpgrade(propId,upgradeKey){
 
 // ==================== PROPS TAB ====================
 function renderProps(){
-  const el=document.getElementById('page-props');if(!el)return;
+  const el=document.getElementById('propsInner');if(!el)return;
   const owned=PROPERTIES.filter(p=>G.ownedProperties.includes(p.id));
   const available=PROPERTIES.filter(p=>!G.ownedProperties.includes(p.id));
   let html='';
@@ -2208,7 +2248,7 @@ function setStashHouse(propId){
 
 // ==================== WAR ROOM ====================
 function renderWarRoom(){
-  const el=document.getElementById('page-warroom');if(!el)return;
+  const el=document.getElementById('page-warroom-inner');if(!el)return;
   const ownedTurfs=TERRITORIES.filter(t=>G.territories[t.id]&&G.territories[t.id].owned);
   const totalTurfIncome=getTurfIncome();
   const dailyBusinessIncome=getDailyIncome();
@@ -2250,15 +2290,20 @@ function pushCrewMessage(from,text,isAlert){
   if(dot)dot.style.display='inline-block';
 }
 function renderPhone(){
-  const el=document.getElementById('page-phone');if(!el)return;
+  const el=document.getElementById('crewMessagesInner');if(!el)return;
   (G.crewMessages||[]).forEach(m=>m.read=true);
   const dot=document.getElementById('phoneNotifDot');
   if(dot)dot.style.display='none';
   if(!G.crewMessages||G.crewMessages.length===0){
-    el.innerHTML=`<div style="font-family:var(--heading);font-size:11px;letter-spacing:3px;color:var(--muted);padding:12px 0;margin-bottom:16px">📱 CREW MESSAGES</div><div class="empty-state">NO MESSAGES YET<br>MESSAGES FROM YOUR CREW APPEAR HERE</div>`;
+    el.innerHTML='<div class="empty-state" style="padding:16px 0">NO MESSAGES YET</div>';
     return;
   }
-  el.innerHTML=`<div style="font-family:var(--heading);font-size:11px;letter-spacing:3px;color:var(--muted);padding:12px 0 8px;margin-bottom:8px;border-bottom:1px solid var(--border)">📱 CREW MESSAGES</div><div class="sms-thread">${(G.crewMessages||[]).map(m=>`<div class="sms-bubble ${m.alert?'sms-alert':''}"><div class="sms-header"><span class="sms-sender">${m.from}</span><span class="sms-day">DAY ${m.day}</span></div><div class="sms-text">${m.text}</div></div>`).join('')}</div>`;
+  el.innerHTML='<div class="sms-thread">'+
+    (G.crewMessages||[]).map(m=>`<div class="sms-bubble${m.alert?' sms-alert':''}">
+      <div class="sms-header"><span class="sms-sender">${m.from}</span><span class="sms-day">DAY ${m.day}</span></div>
+      <div class="sms-text">${m.text}</div>
+    </div>`).join('')+
+  '</div>';
 }
 
 // ==================== MEMORIES ====================
@@ -2268,9 +2313,19 @@ function pushMemory(title,icon,desc){
   G.memories.unshift({title,icon,desc,day:G.gameDay});
 }
 function renderMemories(){
-  const el=document.getElementById('page-memories');if(!el)return;
-  if(!G.memories||G.memories.length===0){el.innerHTML='<div class="section-title" style="margin-bottom:16px">PHOTO WALL</div><div class="empty-state">NO MEMORIES YET<br>BUILD YOUR EMPIRE</div>';return;}
-  el.innerHTML=`<div class="section-title" style="margin-bottom:16px">PHOTO WALL</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${G.memories.map(m=>`<div class="memory-card"><div class="memory-icon">${m.icon}</div><div class="memory-title">${m.title}</div><div class="memory-day">DAY ${m.day}</div><div class="memory-desc">${m.desc}</div></div>`).join('')}</div>`;
+  const el=document.getElementById('memoriesInner');if(!el)return;
+  if(!G.memories||G.memories.length===0){
+    el.innerHTML='<div class="empty-state" style="padding:16px 0">NO MEMORIES YET — BUILD YOUR EMPIRE</div>';
+    return;
+  }
+  el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+    G.memories.map(m=>`<div class="memory-card">
+      <div class="memory-icon">${m.icon}</div>
+      <div class="memory-title">${m.title}</div>
+      <div class="memory-day">DAY ${m.day}</div>
+      <div class="memory-desc">${m.desc}</div>
+    </div>`).join('')+
+  '</div>';
 }
 
 // ==================== WANTED POSTER ====================
@@ -2412,52 +2467,54 @@ function processRivals(){
   });
 }
 
+// ==================== BOSS PAGE ====================
+function renderBossPage(){
+  // Alias section
+  const aliasSection=document.getElementById('aliasSection');
+  if(aliasSection){
+    if(!G.aliasSet){
+      aliasSection.innerHTML=`<input id="aliasInput" type="text" maxlength="20" placeholder="Enter your alias..."
+        style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);padding:10px;font-family:var(--heading);font-size:16px;letter-spacing:2px;border-radius:4px;margin-bottom:8px">
+        <button class="btn btn-primary btn-full" onclick="setAlias()">SET ALIAS</button>`;
+    } else {
+      aliasSection.innerHTML=`<div class="card-row"><span class="card-key">KNOWN AS</span><span class="card-val text-pink">${G.alias}</span></div>
+        <button class="btn btn-secondary" style="width:100%;margin-top:8px;font-size:10px" onclick="G.aliasSet=false;renderBossPage()">CHANGE ALIAS</button>`;
+    }
+  }
+  // Gang name/colour inputs
+  const gni=document.getElementById('gangNameInput');
+  const gci=document.getElementById('gangColourInput');
+  if(gni)gni.value=G.gangName||'THE FIRM';
+  if(gci)gci.value=G.gangColour||'#ff0066';
+  applyGangColour(G.gangColour||'#ff0066');
+  // Street bio
+  const bioEl=document.getElementById('streetBioDisplay');
+  if(bioEl){
+    if(!G.streetBio)G.streetBio=generateStreetBio();
+    bioEl.textContent=G.streetBio;
+  }
+  // Profile actions (prestige, lay low, reset)
+  const pa=document.getElementById('profileActions');
+  if(pa){
+    const canPrestige=G.level>=20;
+    pa.innerHTML=`
+      <div class="card" style="margin-bottom:8px">
+        <div class="card-row"><div class="card-key">PRESTIGE LEVEL</div><div class="card-val text-purple">${G.prestige}</div></div>
+        <div class="card-desc">Reset at level 20+ for +10% income bonus per prestige.</div>
+        <button class="btn btn-purple btn-full mt8" onclick="doPrestige()" ${canPrestige?'':'disabled'}>PRESTIGE${canPrestige?'':' — NEED LV20'}</button>
+      </div>
+      <button class="btn btn-danger btn-full" onclick="layLow()">LAY LOW (Heat -10, Rep -2)</button>
+      <button class="btn btn-secondary btn-full" style="margin-top:8px;opacity:0.5;font-size:10px" onclick="resetGame()">WIPE SAVE</button>`;
+  }
+  // Render wanted poster and memories
+  renderWantedPoster();
+  renderMemories();
+}
+
 // ==================== PROFILE EXTRAS ====================
 function renderProfile(){
-  const xn=G.level*500;
-  document.getElementById('profileName').textContent=G.alias;
-  document.getElementById('notorietyTitle').textContent=getNotoriety();
-  document.getElementById('lifestyleTier').textContent=getLifestyle();
-  document.getElementById('profileLevel').textContent=G.level;
-  document.getElementById('profileXP').textContent=`${G.xp} / ${xn}`;
-  document.getElementById('xpBar').style.width=Math.min(100,(G.xp/xn)*100)+'%';
-  document.getElementById('profileCash').textContent='£'+fmt(G.cash);
-  document.getElementById('profileEarned').textContent='£'+fmt(G.totalEarned);
-  document.getElementById('profileSpent').textContent='£'+fmt(G.totalSpent);
-  document.getElementById('profileNetWorth').textContent='£'+fmt(getNetWorth());
-  document.getElementById('profileHeat').textContent=Math.round(G.heat)+'%';
-  const hf=document.getElementById('heatFill');hf.style.width=G.heat+'%';hf.style.background=G.heat>70?'var(--neon-red)':G.heat>40?'var(--neon-orange)':'var(--neon-green)';
-  document.getElementById('statFightsWon').textContent=G.stats.fightsWon;
-  document.getElementById('statFightsLost').textContent=G.stats.fightsLost;
-  document.getElementById('statMugged').textContent=G.stats.mugged;
-  document.getElementById('statDeals').textContent=G.stats.deals;
-  document.getElementById('statEvents').textContent=G.stats.events;
-  document.getElementById('statDays').textContent=G.stats.days;
-  document.getElementById('statBestTrade').textContent='£'+fmt(G.stats.bestTrade);
-  document.getElementById('statGambleWon').textContent=G.stats.gamblesWon;
-  document.getElementById('prestigeLevel').textContent=G.prestige;
-  document.getElementById('prestigeBonus').textContent='+'+G.prestige*10+'%';
-  document.getElementById('btnPrestige').disabled=G.level<20;
-  // gang name/colour inputs
-  const gni=document.getElementById('gangNameInput');if(gni)gni.value=G.gangName||'THE FIRM';
-  const gci=document.getElementById('gangColourInput');if(gci)gci.value=G.gangColour||'#ff0066';
-  applyGangColour(G.gangColour||'#ff0066');
-  // street bio
-  G.streetBio=generateStreetBio();
-  const sbd=document.getElementById('streetBioDisplay');if(sbd)sbd.textContent=G.streetBio;
-  // boss outfit
-  const nw=getNetWorth();
-  let outfitDesc;
-  if(nw<5000)outfitDesc='TRACKSUIT & TRAINERS';
-  else if(nw<25000)outfitDesc='HOODIE & JOGGERS';
-  else if(nw<100000)outfitDesc='GOLD CHAIN & BOMBER';
-  else if(nw<500000)outfitDesc='DESIGNER SUIT';
-  else outfitDesc='BOSS-LEVEL DRIP';
-  // update char lifestyle to show outfit
-  const cl=document.getElementById('charDisplay');
-  if(cl){
-    // outfit desc injected via renderCharacter — handled there
-  }
+  // kept for backwards compatibility — renderAll calls this
+  renderBossPage();
 }
 
 // ==================== INIT ====================
